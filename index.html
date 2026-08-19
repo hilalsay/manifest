@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manifest Dünyam ✨</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💫</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Mulish:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B1233;
+    --ink-soft:#2E2150;
+    --paper:#FFF6EA;
+    --paper-alt:#FFECD6;
+    --card-line: rgba(27,18,51,0.10);
+
+    --sueda:#2FBF71;   /* yeşil */
+    --hilal:#9D5CFF;   /* mor */
+    --lidya:#FF5FA8;   /* pembe */
+    --zoktay:#3E8EFF;  /* mavi */
+    --mina:#FF4757;    /* kırmızı */
+    --esin:#FFC93C;    /* sarı */
+
+    --display: "Baloo 2", system-ui, sans-serif;
+    --body: "Mulish", system-ui, sans-serif;
+    --mono: "Space Mono", monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:var(--display); margin:0; color:var(--ink);}
+  p{margin:0;}
+  a{color:inherit;}
+  button{font-family:var(--body); cursor:pointer;}
+  ::selection{background:var(--lidya); color:#fff;}
+  :focus-visible{outline:3px solid var(--zoktay); outline-offset:3px; border-radius:6px;}
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .eyebrow::before{content:"✦"; color:var(--lidya);}
+
+  .wrap{max-width:1080px; margin:0 auto; padding:0 24px;}
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(255,246,234,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--card-line);
+  }
+  .nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:12px; padding-bottom:12px;
+  }
+  .logo{
+    font-family:var(--display); font-weight:800; font-size:1.15rem;
+    display:flex; align-items:center; gap:8px; background:none; border:none; color:var(--ink);
+    padding:4px 6px;
+  }
+  .logo .dot{
+    width:10px; height:10px; border-radius:50%;
+    background:conic-gradient(var(--sueda),var(--hilal),var(--lidya),var(--zoktay),var(--mina),var(--esin),var(--sueda));
+    animation:spin 4s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .navlinks{display:flex; gap:4px; list-style:none; margin:0; padding:0;}
+  .navlinks a{
+    text-decoration:none; font-weight:700; font-size:0.88rem;
+    padding:8px 12px; border-radius:999px; color:var(--ink-soft);
+  }
+  .navlinks a:hover{background:var(--paper-alt); color:var(--ink);}
+  .navtoggle{display:none; background:none; border:none; font-size:1.4rem;}
+  @media (max-width:760px){
+    .navlinks{
+      position:fixed; inset:60px 12px auto 12px; flex-direction:column;
+      background:var(--paper); border:1px solid var(--card-line); border-radius:16px;
+      padding:10px; box-shadow:0 12px 30px rgba(27,18,51,0.15);
+      transform:translateY(-12px); opacity:0; pointer-events:none; transition:.2s;
+    }
+    .navlinks.open{transform:translateY(0); opacity:1; pointer-events:auto;}
+    .navlinks a{padding:12px 14px;}
+    .navtoggle{display:block;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    background:
+      radial-gradient(60% 50% at 20% 0%, rgba(157,92,255,0.35), transparent 60%),
+      radial-gradient(50% 45% at 85% 10%, rgba(255,95,168,0.30), transparent 60%),
+      radial-gradient(45% 40% at 60% 90%, rgba(62,142,255,0.25), transparent 60%),
+      var(--ink);
+    color:#fff;
+    padding:64px 0 84px;
+  }
+  .hero::before{ /* spotlight beams */
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      linear-gradient(100deg, rgba(255,255,255,0.06) 0%, transparent 8%),
+      linear-gradient(115deg, rgba(255,255,255,0.05) 0%, transparent 6%);
+  }
+  .stars{position:absolute; inset:0; pointer-events:none; opacity:0.5;}
+  .hero .wrap{position:relative; display:grid; grid-template-columns:1.15fr 0.85fr; gap:40px; align-items:center;}
+  @media (max-width:860px){.hero .wrap{grid-template-columns:1fr;}}
+
+  .hero-eyebrow{
+    font-family:var(--mono); font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase;
+    color:#F4C9E4; display:inline-flex; align-items:center; gap:8px; margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:clamp(2.4rem, 6vw, 3.6rem);
+    font-weight:800; line-height:1.02;
+    background:linear-gradient(95deg,#fff 10%, var(--lidya) 45%, var(--esin) 65%, var(--zoktay) 90%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .hero-sub{margin-top:16px; font-size:1.05rem; color:#E7DEFF; max-width:46ch;}
+  .badges{display:flex; flex-wrap:wrap; gap:10px; margin-top:22px;}
+  .badge{
+    font-weight:800; font-size:0.85rem; padding:9px 14px; border-radius:999px;
+    background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.25);
+    display:flex; align-items:center; gap:6px;
+  }
+  .cta-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:28px;}
+  .btn{
+    border:none; border-radius:999px; padding:13px 22px; font-weight:800; font-size:0.95rem;
+    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+    transition:transform .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:linear-gradient(95deg, var(--lidya), var(--hilal)); color:#fff; box-shadow:0 10px 24px rgba(157,92,255,0.35);}
+  .btn-ghost{background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.35);}
+  .btn-dark{background:var(--ink); color:#fff;}
+
+  /* floating holo card in hero */
+  .hero-card-stage{display:flex; justify-content:center;}
+  .mini-card{
+    width:220px; aspect-ratio:3/4.2; border-radius:22px; position:relative;
+    background:
+      conic-gradient(from 120deg, var(--sueda), var(--hilal), var(--lidya), var(--zoktay), var(--mina), var(--esin), var(--sueda));
+    padding:5px;
+    animation:float 5s ease-in-out infinite;
+    box-shadow:0 30px 60px rgba(0,0,0,0.45);
+  }
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-3deg);} 50%{transform:translateY(-14px) rotate(2deg);}}
+  .mini-card-inner{
+    width:100%; height:100%; border-radius:18px; background:var(--ink);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    position:relative; overflow:hidden;
+  }
+  .mini-card-inner::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.35) 45%, transparent 60%);
+    animation:shine 3.2s linear infinite;
+  }
+  @keyframes shine{0%{transform:translateX(-120%) rotate(8deg);} 100%{transform:translateX(120%) rotate(8deg);}}
+  .mini-card-inner span{font-family:var(--display); font-weight:800; color:#fff; font-size:1.05rem; z-index:1;}
+  .mini-card-inner small{font-family:var(--mono); font-size:0.65rem; letter-spacing:.1em; color:#D9CBFF; z-index:1;}
+
+  /* ---------- MARQUEE ---------- */
+  .marquee{
+    background:var(--ink); color:#fff; overflow:hidden; white-space:nowrap;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .marquee-track{display:inline-block; padding:12px 0; animation:scroll 26s linear infinite;}
+  .marquee-track span{font-family:var(--mono); font-size:0.82rem; letter-spacing:0.08em; margin:0 22px; opacity:0.85;}
+  @keyframes scroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+
+  /* ---------- SECTIONS ---------- */
+  section.block{padding:76px 0;}
+  .block-head{max-width:640px; margin:0 auto 40px; text-align:center;}
+  .block-head h2{font-size:clamp(1.7rem,3.4vw,2.3rem); margin-top:10px;}
+  .block-head p{margin-top:12px; color:var(--ink-soft); font-size:1rem;}
+
+  /* ---------- MEMBER CARDS ---------- */
+  .members-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:22px;
+  }
+  @media (max-width:760px){.members-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:480px){.members-grid{grid-template-columns:1fr;}}
+
+  .card3d{ perspective:1200px; }
+  .card3d-inner{
+    position:relative; width:100%; aspect-ratio:3/4.1;
+    transform-style:preserve-3d; transition:transform .6s cubic-bezier(.2,.8,.2,1);
+    border-radius:20px; cursor:pointer;
+  }
+  .card3d.flipped .card3d-inner{transform:rotateY(180deg);}
+  .face{
+    position:absolute; inset:0; border-radius:20px; backface-visibility:hidden;
+    display:flex; flex-direction:column; padding:20px; overflow:hidden;
+  }
+  .face-front{
+    color:#fff; justify-content:flex-end;
+    background:
+      radial-gradient(120% 90% at 20% 0%, rgba(255,255,255,0.35), transparent 55%),
+      var(--m-color);
+    box-shadow:0 16px 34px rgba(27,18,51,0.20);
+  }
+  .face-front::before{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(130deg, transparent 35%, rgba(255,255,255,0.45) 48%, transparent 62%);
+    transform:translateX(-130%);
+    transition:transform .5s;
+  }
+  .card3d:hover .face-front::before{transform:translateX(130%);}
+  .face-front .initial{
+    position:absolute; top:14px; left:16px; font-family:var(--display); font-weight:800;
+    font-size:2.4rem; opacity:0.35;
+  }
+  .face-front .name{font-family:var(--display); font-weight:800; font-size:1.2rem;}
+  .face-front .role{font-family:var(--mono); font-size:0.68rem; letter-spacing:.08em; text-transform:uppercase; opacity:0.9; margin-top:4px;}
+  .face-front .taphint{position:absolute; top:14px; right:16px; font-size:0.7rem; font-family:var(--mono); opacity:0.75;}
+
+  .face-back{
+    background:var(--paper); border:2px solid var(--m-color); transform:rotateY(180deg);
+    justify-content:center; gap:10px; text-align:center; align-items:center;
+  }
+  .face-back .chip{
+    font-family:var(--mono); font-size:0.7rem; letter-spacing:.08em; text-transform:uppercase;
+    background:var(--m-color); color:#fff; padding:6px 12px; border-radius:999px; font-weight:700;
+  }
+  .face-back .fact{font-size:0.9rem; color:var(--ink-soft);}
+  .face-back .name2{font-family:var(--display); font-weight:800; font-size:1.05rem;}
+
+  /* ---------- QUIZ ---------- */
+  .quiz-card{
+    max-width:640px; margin:0 auto; background:#fff; border:1px solid var(--card-line);
+    border-radius:24px; padding:32px; box-shadow:0 20px 40px rgba(27,18,51,0.08);
+  }
+  .quiz-progress{display:flex; gap:6px; margin-bottom:22px;}
+  .quiz-progress i{flex:1; height:6px; border-radius:999px; background:var(--paper-alt);}
+  .quiz-progress i.done{background:linear-gradient(90deg, var(--lidya), var(--hilal));}
+  .q-title{font-family:var(--display); font-weight:800; font-size:1.25rem; margin-bottom:18px;}
+  .q-options{display:grid; gap:10px;}
+  .q-option{
+    text-align:left; padding:14px 16px; border-radius:14px; border:2px solid var(--card-line);
+    background:var(--paper); font-weight:700; font-size:0.95rem; transition:.15s;
+  }
+  .q-option:hover{border-color:var(--hilal); background:#fff;}
+  .quiz-result{display:none; text-align:center;}
+  .quiz-result.show{display:block;}
+  .quiz-body.hide{display:none;}
+  .result-badge{
+    width:110px; height:110px; border-radius:50%; margin:0 auto 16px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--display); font-weight:800; font-size:2.2rem; color:#fff;
+    background:var(--m-color, var(--lidya));
+    box-shadow:0 14px 30px rgba(27,18,51,0.25);
+  }
+  .result-title{font-family:var(--display); font-weight:800; font-size:1.5rem;}
+  .result-fact{color:var(--ink-soft); margin-top:10px; max-width:44ch; margin-left:auto; margin-right:auto;}
+  .retake{margin-top:22px;}
+
+  /* ---------- GAMES ---------- */
+  .games-grid{display:grid; grid-template-columns:1fr; gap:44px;}
+  .game-panel{
+    background:#fff; border:1px solid var(--card-line); border-radius:24px; padding:28px;
+    box-shadow:0 16px 30px rgba(27,18,51,0.06);
+  }
+  .game-panel-head{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:18px;}
+  .game-panel-head h3{font-size:1.3rem;}
+  .stat{
+    font-family:var(--mono); font-size:0.8rem; background:var(--paper-alt); padding:8px 14px; border-radius:999px; font-weight:700;
+  }
+
+  /* memory game */
+  .memo-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:440px; margin:0 auto;
+  }
+  @media (max-width:480px){.memo-grid{grid-template-columns:repeat(3,1fr);}}
+  .memo-cell{ perspective:800px; aspect-ratio:1; }
+  .memo-cell-inner{
+    width:100%; height:100%; position:relative; transform-style:preserve-3d;
+    transition:transform .45s; border-radius:12px;
+  }
+  .memo-cell.open .memo-cell-inner, .memo-cell.matched .memo-cell-inner{transform:rotateY(180deg);}
+  .memo-face{
+    position:absolute; inset:0; border-radius:12px; backface-visibility:hidden;
+    display:flex; align-items:center; justify-content:center; font-family:var(--display); font-weight:800; font-size:1.3rem;
+  }
+  .memo-back{background:linear-gradient(135deg, var(--hilal), var(--zoktay)); color:#fff; font-size:1.4rem;}
+  .memo-front{background:var(--mc,var(--lidya)); color:#fff; transform:rotateY(180deg);}
+  .memo-cell.matched .memo-front{opacity:0.55;}
+  .memo-cell button{
+    all:unset; display:block; width:100%; height:100%; cursor:pointer;
+    position:absolute; inset:0; z-index:2;
+  }
+  .memo-controls{display:flex; justify-content:center; margin-top:18px;}
+
+  /* song of the day */
+  .song-banner{
+    background:linear-gradient(95deg, var(--hilal), var(--lidya));
+    color:#fff; text-align:center; padding:14px 24px;
+    font-weight:700; font-size:0.95rem;
+  }
+  .song-banner strong{font-family:var(--display); font-weight:800;}
+
+  /* mini arcade games */
+  .arcade-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:22px;}
+  @media (max-width:700px){.arcade-grid{grid-template-columns:1fr;}}
+  .arcade-canvas{
+    width:100%; max-width:420px; height:260px; display:block; margin:0 auto;
+    background:var(--ink); border-radius:16px; border:2px solid var(--card-line);
+    touch-action:none; cursor:pointer;
+  }
+  .arcade-hint{
+    text-align:center; font-size:0.85rem; color:var(--ink-soft); margin-top:10px;
+  }
+  .arcade-score{font-family:var(--mono); font-size:0.8rem; background:var(--paper-alt); padding:8px 14px; border-radius:999px; font-weight:700;}
+
+  /* rhythm lanes */
+  .rhythm-wrap{max-width:420px; margin:0 auto;}
+  .rhythm-lanes{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
+  .rhythm-lane{
+    position:relative; height:200px; border-radius:12px; overflow:hidden;
+    background:var(--ink); border:2px solid var(--card-line);
+  }
+  .rhythm-target{
+    position:absolute; left:0; right:0; bottom:28px; height:4px;
+    background:linear-gradient(90deg, var(--lidya), var(--esin));
+    box-shadow:0 0 12px var(--lidya);
+  }
+  .rhythm-note{
+    position:absolute; left:50%; width:36px; height:36px; margin-left:-18px;
+    border-radius:50%; top:-36px; transition:none;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1rem; box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  }
+  .rhythm-lane button{
+    all:unset; position:absolute; inset:0; cursor:pointer; z-index:2;
+  }
+  .rhythm-lane.hit .rhythm-target{animation:rhythmFlash .25s;}
+  @keyframes rhythmFlash{0%,100%{opacity:1;} 50%{opacity:0.3; transform:scaleY(2);}}
+  .rhythm-keys{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:10px;
+    font-family:var(--mono); font-size:0.68rem; text-align:center; color:var(--ink-soft);
+  }
+  .win-msg{
+    text-align:center; font-weight:800; margin-top:16px; color:var(--sueda); display:none;
+  }
+  .win-msg.show{display:block;}
+
+  /* painting canvas */
+  .paint-toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:16px;}
+  .swatch{
+    width:30px; height:30px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 2px var(--card-line);
+    cursor:pointer; padding:0;
+  }
+  .swatch.active{box-shadow:0 0 0 3px var(--ink);}
+  .paint-toolbar input[type=range]{accent-color:var(--hilal);}
+  #paintCanvas{
+    width:100%; max-width:640px; height:380px; display:block; margin:0 auto;
+    background:#fff; border-radius:16px; border:2px dashed var(--card-line); touch-action:none;
+  }
+  .paint-actions{display:flex; justify-content:center; gap:10px; margin-top:14px;}
+
+  /* ---------- CHANNEL ---------- */
+  .channel-panel{
+    background:var(--ink); color:#fff; border-radius:28px; padding:36px; display:grid;
+    grid-template-columns:1fr 1fr; gap:30px; align-items:center; overflow:hidden; position:relative;
+  }
+  @media (max-width:800px){.channel-panel{grid-template-columns:1fr;}}
+  .channel-panel::before{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(60% 60% at 90% 0%, rgba(255,95,168,0.25), transparent 60%);
+  }
+  .channel-info{position:relative;}
+  .channel-info h3{color:#fff; font-size:1.5rem; margin-top:10px;}
+  .channel-info p{color:#D9CBFF; margin-top:12px;}
+  .yt-frame-wrap{position:relative; border-radius:16px; overflow:hidden; aspect-ratio:16/9; background:#000;}
+  .yt-frame-wrap iframe{width:100%; height:100%; border:0;}
+
+  /* ---------- FOOTER / SECRET ---------- */
+  footer{padding:50px 0 70px; text-align:center;}
+  .heart-btn{
+    background:none; border:none; font-size:1.4rem; padding:10px; border-radius:50%;
+  }
+  footer p{color:var(--ink-soft); font-size:0.85rem; margin-top:10px;}
+
+  .secret-modal{
+    position:fixed; inset:0; background:rgba(27,18,51,0.55); backdrop-filter:blur(4px);
+    display:flex; align-items:center; justify-content:center; z-index:100; padding:20px;
+    opacity:0; pointer-events:none; transition:.2s;
+  }
+  .secret-modal.show{opacity:1; pointer-events:auto;}
+  .secret-box{
+    background:var(--paper); border-radius:24px; padding:36px; max-width:380px; text-align:center;
+    box-shadow:0 30px 60px rgba(0,0,0,0.35);
+  }
+  .secret-box .emoji{font-size:2.4rem;}
+  .secret-box h3{margin-top:10px;}
+  .secret-box p{margin-top:10px; color:var(--ink-soft);}
+
+  .confetti{position:fixed; top:-10px; z-index:200; border-radius:2px; pointer-events:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap">
+      <button class="logo" onclick="document.getElementById('ana-sayfa').scrollIntoView()">
+        <span class="dot"></span> Manifest Dünyam
+      </button>
+      <button class="navtoggle" id="navToggle" aria-label="Menüyü aç">☰</button>
+      <ul class="navlinks" id="navLinks">
+        <li><a href="#ana-sayfa">Ana Sayfa</a></li>
+        <li><a href="#kizlar">Manifest Kızları</a></li>
+        <li><a href="#test">Test</a></li>
+        <li><a href="#oyunlar">Oyunlar</a></li>
+        <li><a href="#atolye">Atölye</a></li>
+        <li><a href="#kanalim">Kanalım</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="ana-sayfa">
+    <div class="stars" id="stars"></div>
+    <div class="wrap">
+      <div>
+        <div class="hero-eyebrow">✦ Fan sayfası · T-Pop dünyası</div>
+        <h1>Manifest Dünyam</h1>
+        <p class="hero-sub">Manifest şarkıları, dans, voleybol ve resim aşkımı bir araya getirdiğim küçük ve renkli köşem. Buraya her gün biraz daha parıltı ekliyorum ✨</p>
+        <div class="badges">
+          <span class="badge">💃 Dans</span>
+          <span class="badge">🏐 Voleybol</span>
+          <span class="badge">🎨 Resim</span>
+          <span class="badge">🎥 YouTube Shorts</span>
+        </div>
+        <div class="cta-row">
+          <a href="#test" class="btn btn-primary">Hangi Manifest Kızısın? 💫</a>
+          <a href="#kizlar" class="btn btn-ghost">Kızları Keşfet</a>
+        </div>
+      </div>
+      <div class="hero-card-stage">
+        <div class="mini-card">
+          <div class="mini-card-inner">
+            <span>MANİFEST</span>
+            <small>FAN KARTI · 001</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="song-banner" id="songBanner">🎵 Günün Şarkısı: <strong>…</strong></div>
+
+  <div class="marquee">
+    <div class="marquee-track" id="marqueeTrack">
+      <span>★ ZAMANSIZDIK</span><span>★ ARIYO</span><span>★ SNAP</span><span>★ KTS</span><span>★ AMATÖR</span><span>★ TOZ PEMBE</span><span>★ BAŞROL SENSİN</span>
+      <span>★ ZAMANSIZDIK</span><span>★ ARIYO</span><span>★ SNAP</span><span>★ KTS</span><span>★ AMATÖR</span><span>★ TOZ PEMBE</span><span>★ BAŞROL SENSİN</span>
+    </div>
+  </div>
+
+  <!-- ================= MEMBERS ================= -->
+  <section class="block" id="kizlar">
+    <div class="wrap">
+      <div class="block-head">
+        <span class="eyebrow">Kartları Çevir</span>
+        <h2>Manifest Kızları</h2>
+        <p>Her kızın kendine ait bir rengi var. Kartlara dokun, arka yüzlerini gör!</p>
+      </div>
+      <div class="members-grid" id="membersGrid"></div>
+    </div>
+  </section>
+
+  <!-- ================= QUIZ ================= -->
+  <section class="block" id="test" style="background:var(--paper-alt);">
+    <div class="wrap">
+      <div class="block-head">
+        <span class="eyebrow">Küçük Test</span>
+        <h2>Hangi Manifest Kızısın?</h2>
+        <p>5 soru cevapla, sana en çok benzeyen Manifest kızını öğren.</p>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-progress" id="quizProgress"></div>
+
+        <div class="quiz-body" id="quizBody">
+          <div class="q-title" id="qTitle"></div>
+          <div class="q-options" id="qOptions"></div>
+        </div>
+
+        <div class="quiz-result" id="quizResult">
+          <div class="result-badge" id="resultBadge"></div>
+          <div class="result-title" id="resultTitle"></div>
+          <p class="result-fact" id="resultFact"></p>
+          <button class="btn btn-dark retake" id="retakeBtn">Tekrar Çöz 🔁</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GAMES ================= -->
+  <section class="block" id="oyunlar">
+    <div class="wrap">
+      <div class="block-head">
+        <span class="eyebrow">Oyun Kutusu</span>
+        <h2>Oynayarak Eğlen</h2>
+        <p>Renkleri hatırla, topu havada tut, ritme uy!</p>
+      </div>
+
+      <div class="games-grid">
+        <div class="game-panel">
+          <div class="game-panel-head">
+            <h3>🧠 Renk Hafıza Oyunu</h3>
+            <span class="stat" id="memoStat">Hamle: 0 · Süre: 0:00</span>
+          </div>
+          <div class="memo-grid" id="memoGrid"></div>
+          <p class="win-msg" id="memoWin">Harika iş! Tüm çiftleri buldun 🎉</p>
+          <div class="memo-controls">
+            <button class="btn btn-dark" id="memoReset">Yeniden Karıştır 🔀</button>
+          </div>
+        </div>
+
+        <div class="arcade-grid">
+          <div class="game-panel">
+            <div class="game-panel-head">
+              <h3>🏐 Voleybol Tut</h3>
+              <span class="arcade-score" id="vballScore">Skor: 0</span>
+            </div>
+            <canvas class="arcade-canvas" id="vballCanvas" width="420" height="260"></canvas>
+            <p class="arcade-hint">Tıkla veya dokun — topu yere düşürme!</p>
+            <div class="memo-controls">
+              <button class="btn btn-dark" id="vballReset">Yeniden Başla</button>
+            </div>
+          </div>
+
+          <div class="game-panel">
+            <div class="game-panel-head">
+              <h3>💃 Dans Ritmi</h3>
+              <span class="arcade-score" id="rhythmScore">Skor: 0 · Combo: 0</span>
+            </div>
+            <div class="rhythm-wrap">
+              <div class="rhythm-lanes" id="rhythmLanes"></div>
+              <div class="rhythm-keys">
+                <span>← Sol</span><span>↓ Orta</span><span>↑ Orta</span><span>→ Sağ</span>
+              </div>
+            </div>
+            <p class="arcade-hint">Renkli daire hedef çizgiye gelince o şeride tıkla veya ok tuşuna bas!</p>
+            <div class="memo-controls">
+              <button class="btn btn-dark" id="rhythmStart">Başla ▶</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ATÖLYE (PAINTING) ================= -->
+  <section class="block" id="atolye" style="background:var(--paper-alt);">
+    <div class="wrap">
+      <div class="block-head">
+        <span class="eyebrow">Sanat Atölyesi</span>
+        <h2>Kendi Manifest Kartını Boya</h2>
+        <p>Fırçanı seç, rengini seç, çiz!</p>
+      </div>
+
+      <div class="game-panel">
+        <div class="paint-toolbar" id="paintToolbar">
+          <span style="font-family:var(--mono); font-size:0.75rem; font-weight:700;">RENK:</span>
+        </div>
+        <div class="paint-toolbar">
+          <span style="font-family:var(--mono); font-size:0.75rem; font-weight:700;">FIRÇA:</span>
+          <input type="range" min="2" max="28" value="8" id="brushSize">
+        </div>
+        <canvas id="paintCanvas" width="640" height="380"></canvas>
+        <div class="paint-actions">
+          <button class="btn btn-ghost" style="background:var(--paper); color:var(--ink); border:2px solid var(--card-line);" id="clearCanvas">Temizle 🧽</button>
+          <button class="btn btn-primary" id="downloadCanvas">İndir 💾</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CHANNEL ================= -->
+  <section class="block" id="kanalim">
+    <div class="wrap">
+      <div class="channel-panel">
+        <div class="channel-info">
+          <span class="eyebrow" style="color:#F4C9E4;">🎥 YouTube</span>
+          <h3>Lilanınavatardunyası</h3>
+          <p>Manifest dans coverları ve shortlarımı paylaştığım kanalım. Yeni videolar için abone olmayı unutma!</p>
+          <div class="cta-row">
+            <a href="https://www.youtube.com/@lilan%C4%B1navatard%C3%BCnyas%C4%B1" target="_blank" rel="noopener" class="btn btn-primary">Kanala Git ▶</a>
+          </div>
+        </div>
+        <div class="yt-frame-wrap">
+          <iframe src="https://www.youtube.com/embed/videoseries?list=UUO7iQCvfvpl-sY0R-Ikah4Q" title="Kanal videoları" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <button class="heart-btn" id="secretHeart" aria-label="gizli">💌</button>
+    <p>Sevgiyle yapıldı · Manifest Dünyam ✨</p>
+  </footer>
+
+  <div class="secret-modal" id="secretModal">
+    <div class="secret-box">
+      <div class="emoji">🌟</div>
+      <h3>Gizli bir mesaj buldun!</h3>
+      <p>Bu senin kendi küçük dünyan. Dans et, boya yap, hayal kur — hepsi senin renginle daha güzel 💜</p>
+      <button class="btn btn-dark" id="closeSecret" style="margin-top:16px;">Kapat</button>
+    </div>
+  </div>
+
+<script>
+/* ============ DATA ============ */
+const MEMBERS = [
+  { key:"sueda",  name:"Sueda Uluca",        role:"Ana Vokal", color:"var(--sueda)",  hex:"#2FBF71", emoji:"🌿", colorTr:"Yeşil",
+    fact:"Grubun en genç üyesi. İletişim tasarımı okuyor ve sahnede güçlü sesiyle öne çıkıyor." },
+  { key:"hilal",  name:"Hilal Yelekçi",      role:"Baş Dansçı", color:"var(--hilal)", hex:"#9D5CFF", emoji:"💜", colorTr:"Mor",
+    fact:"Bilgisayar mühendisliği okudu, küçük yaşlardan beri dans ediyor ve koreografilere hakim." },
+  { key:"lidya",  name:"Lidya Pınar",        role:"Baş Vokalist", color:"var(--lidya)", hex:"#FF5FA8", emoji:"🌸", colorTr:"Pembe",
+    fact:"Uzun yıllar buz pateni yapmış, hem sesiyle hem zarif duruşuyla tanınıyor." },
+  { key:"zoktay", name:"Zeynep Sude Oktay",  role:"Dansçı · Zoktay", color:"var(--zoktay)", hex:"#3E8EFF", emoji:"💙", colorTr:"Mavi",
+    fact:"Sahne adı 'Zoktay'. Kendi tarzını yansıtan özgün duruşuyla dikkat çekiyor." },
+  { key:"mina",   name:"Mina Solak",         role:"Koreografi Ustası", color:"var(--mina)", hex:"#FF4757", emoji:"❤️", colorTr:"Kırmızı",
+    fact:"Grubun en deneyimli üyelerinden. Salsa dansında da oldukça başarılı." },
+  { key:"esin",   name:"Esin Bahat",         role:"Ana Dansçı", color:"var(--esin)", hex:"#FFC93C", emoji:"⭐", colorTr:"Sarı",
+    fact:"Profesyonel dans eğitmeni. Disiplini ve pozitif enerjisiyle biliniyor." },
+];
+
+const SONGS = [
+  { title:"Zamansızdık", emoji:"⏳" },
+  { title:"Arıyo", emoji:"📞" },
+  { title:"Snap", emoji:"📸" },
+  { title:"KTS", emoji:"🔥" },
+  { title:"Amatör", emoji:"🎤" },
+  { title:"Toz Pembe", emoji:"🌷" },
+  { title:"Başrol Sensin", emoji:"🎬" },
+];
+
+/* ============ MEMBER CARDS ============ */
+const grid = document.getElementById("membersGrid");
+MEMBERS.forEach((m,i)=>{
+  const el = document.createElement("div");
+  el.className = "card3d";
+  el.innerHTML = `
+    <div class="card3d-inner">
+      <div class="face face-front" style="--m-color:${m.hex}">
+        <span class="taphint">DOKUN ↻</span>
+        <span class="initial">${m.emoji}</span>
+        <span class="name">${m.name}</span>
+        <span class="role">${m.role}</span>
+      </div>
+      <div class="face face-back" style="--m-color:${m.hex}">
+        <span class="chip" style="background:${m.hex}">${m.role}</span>
+        <span class="name2">${m.name}</span>
+        <p class="fact">${m.fact}</p>
+      </div>
+    </div>`;
+  el.addEventListener("click", ()=> el.classList.toggle("flipped"));
+  grid.appendChild(el);
+});
+
+/* ============ QUIZ ============ */
+const QUESTIONS = [
+  { q:"Boş bir günün olsa en çok ne yaparsın?",
+    opts:["Yeni bir melodi mırıldanırım","Aynanın karşısında dans hareketi çalışırım","Kıyafetlerimle yeni kombinler denerim","Arkadaşlarımla plan yaparım","Herkesi güldürecek bir şaka bulurum","Müzik açıp evde konser veririm"]},
+  { q:"Arkadaşların seni nasıl tanımlar?",
+    opts:["Tatlı ve duygusal","Enerjik ve spontane","Zarif ve özgün","Açık sözlü ve kendinden emin","Çalışkan ve kararlı","Disiplinli ve pozitif"]},
+  { q:"Sahneye çıksan en çok neyinle öne çıkardın?",
+    opts:["Güçlü sesimle","Enerjik dans hareketlerimle","Sahne kostümümle","Kendi tarzımı yansıtan duruşumla","Kusursuz koreografimle","Bitmeyen enerjimle"]},
+  { q:"En sevdiğin renk hangisi?",
+    opts:["Yeşil","Mor","Pembe","Mavi","Kırmızı","Sarı"]},
+  { q:"Bir Manifest konserinde olsan en çok ne yapardın?",
+    opts:["Şarkı sözlerini tek kelime kaçırmadan söylerdim","Ön sırada dans ederdim","En güzel kombini giyip fotoğraf çektirirdim","Arkadaşlarımı organize ederdim","Koreografiyi ezbere bilirdim","Konser bitene kadar zıplardım"]},
+];
+
+let qIndex = 0;
+const tally = [0,0,0,0,0,0];
+
+const qTitle = document.getElementById("qTitle");
+const qOptions = document.getElementById("qOptions");
+const quizProgress = document.getElementById("quizProgress");
+const quizBody = document.getElementById("quizBody");
+const quizResult = document.getElementById("quizResult");
+
+function renderProgress(){
+  quizProgress.innerHTML = "";
+  QUESTIONS.forEach((_,i)=>{
+    const i_el = document.createElement("i");
+    if(i < qIndex) i_el.classList.add("done");
+    quizProgress.appendChild(i_el);
+  });
+}
+
+function renderQuestion(){
+  renderProgress();
+  const cur = QUESTIONS[qIndex];
+  qTitle.textContent = `${qIndex+1}. ${cur.q}`;
+  qOptions.innerHTML = "";
+  cur.opts.forEach((opt,i)=>{
+    const b = document.createElement("button");
+    b.className = "q-option";
+    b.textContent = opt;
+    b.addEventListener("click", ()=>{
+      tally[i]++;
+      qIndex++;
+      if(qIndex < QUESTIONS.length){ renderQuestion(); }
+      else { showResult(); }
+    });
+    qOptions.appendChild(b);
+  });
+}
+
+function showResult(){
+  quizBody.classList.add("hide");
+  quizResult.classList.add("show");
+  let best = 0;
+  for(let i=1;i<tally.length;i++){ if(tally[i] > tally[best]) best = i; }
+  const m = MEMBERS[best];
+  document.getElementById("resultBadge").style.background = m.hex;
+  document.getElementById("resultBadge").textContent = m.emoji;
+  document.getElementById("resultTitle").textContent = `Sen tam olarak ${m.name} gibisin!`;
+  document.getElementById("resultFact").textContent = `${m.fact} Senin rengin: ${m.colorTr} ${m.emoji}`;
+}
+
+document.getElementById("retakeBtn").addEventListener("click", ()=>{
+  qIndex = 0;
+  for(let i=0;i<tally.length;i++) tally[i]=0;
+  quizResult.classList.remove("show");
+  quizBody.classList.remove("hide");
+  renderQuestion();
+});
+
+renderQuestion();
+
+/* ============ MEMORY GAME ============ */
+const memoGrid = document.getElementById("memoGrid");
+const memoStat = document.getElementById("memoStat");
+const memoWin = document.getElementById("memoWin");
+let moves = 0, openCells = [], matchedCount = 0, lock = false;
+let memoTimer = null, memoSeconds = 0;
+
+function formatTime(sec){
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${String(s).padStart(2,"0")}`;
+}
+
+function startMemoTimer(){
+  clearInterval(memoTimer);
+  memoSeconds = 0;
+  memoStat.textContent = `Hamle: 0 · Süre: ${formatTime(0)}`;
+  memoTimer = setInterval(()=>{
+    memoSeconds++;
+    memoStat.textContent = `Hamle: ${moves} · Süre: ${formatTime(memoSeconds)}`;
+  }, 1000);
+}
+
+function stopMemoTimer(){
+  clearInterval(memoTimer);
+  memoTimer = null;
+}
+
+function buildMemoDeck(){
+  let deck = [];
+  MEMBERS.forEach(m => { deck.push(m); deck.push(m); });
+  for(let i = deck.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i+1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  return deck;
+}
+
+function renderMemo(){
+  moves = 0; openCells = []; matchedCount = 0; lock = false;
+  memoWin.classList.remove("show");
+  startMemoTimer();
+  const deck = buildMemoDeck();
+  memoGrid.innerHTML = "";
+  deck.forEach((m, idx) => {
+    const cell = document.createElement("div");
+    cell.className = "memo-cell";
+    cell.dataset.key = m.key;
+    cell.dataset.idx = idx;
+    cell.innerHTML = `
+      <div class="memo-cell-inner">
+        <div class="memo-face memo-back">✨</div>
+        <div class="memo-face memo-front" style="--mc:${m.hex}">${m.emoji}</div>
+      </div>`;
+    const btn = document.createElement("button");
+    btn.setAttribute("aria-label", "kart");
+    btn.addEventListener("click", () => flipMemo(cell));
+    cell.querySelector(".memo-cell-inner").appendChild(btn);
+    memoGrid.appendChild(cell);
+  });
+}
+
+function flipMemo(cell){
+  if(lock || cell.classList.contains("open") || cell.classList.contains("matched")) return;
+  cell.classList.add("open");
+  openCells.push(cell);
+  if(openCells.length === 2){
+    moves++;
+    memoStat.textContent = `Hamle: ${moves} · Süre: ${formatTime(memoSeconds)}`;
+    lock = true;
+    const [a,b] = openCells;
+    if(a.dataset.key === b.dataset.key){
+      a.classList.add("matched"); b.classList.add("matched");
+      openCells = []; lock = false; matchedCount++;
+      if(matchedCount === MEMBERS.length){
+        stopMemoTimer();
+        memoWin.textContent = `Harika iş! ${moves} hamlede, ${formatTime(memoSeconds)} sürede bitirdin 🎉`;
+        memoWin.classList.add("show");
+        launchConfetti();
+      }
+    } else {
+      setTimeout(()=>{
+        a.classList.remove("open"); b.classList.remove("open");
+        openCells = []; lock = false;
+      }, 700);
+    }
+  }
+}
+
+document.getElementById("memoReset").addEventListener("click", renderMemo);
+renderMemo();
+
+/* ============ VOLLEYBALL GAME ============ */
+const vballCanvas = document.getElementById("vballCanvas");
+const vballCtx = vballCanvas.getContext("2d");
+const vballScoreEl = document.getElementById("vballScore");
+let vballRunning = false, vballScore = 0, vballAnim = null;
+
+const vball = { x:210, y:80, vx:2.2, vy:0, r:18, gravity:0.22 };
+const vballPlayer = { x:210, y:230, w:70, h:12 };
+
+function resetVball(){
+  vball.x = vballCanvas.width / 2;
+  vball.y = 70;
+  vball.vx = (Math.random() > 0.5 ? 1 : -1) * (2 + Math.random() * 1.5);
+  vball.vy = 0;
+  vballScore = 0;
+  vballScoreEl.textContent = "Skor: 0";
+  vballRunning = true;
+}
+
+function drawVball(){
+  const w = vballCanvas.width, h = vballCanvas.height;
+  vballCtx.fillStyle = "#1B1233";
+  vballCtx.fillRect(0, 0, w, h);
+
+  vballCtx.strokeStyle = "rgba(255,255,255,0.12)";
+  vballCtx.lineWidth = 2;
+  vballCtx.beginPath();
+  vballCtx.moveTo(0, h - 36);
+  vballCtx.lineTo(w, h - 36);
+  vballCtx.stroke();
+
+  vballCtx.fillStyle = "rgba(255,255,255,0.15)";
+  vballCtx.fillRect(vballPlayer.x - vballPlayer.w/2, vballPlayer.y, vballPlayer.w, vballPlayer.h);
+
+  const grad = vballCtx.createRadialGradient(vball.x - 4, vball.y - 4, 2, vball.x, vball.y, vball.r);
+  grad.addColorStop(0, "#fff");
+  grad.addColorStop(0.4, "#FF5FA8");
+  grad.addColorStop(1, "#9D5CFF");
+  vballCtx.fillStyle = grad;
+  vballCtx.beginPath();
+  vballCtx.arc(vball.x, vball.y, vball.r, 0, Math.PI * 2);
+  vballCtx.fill();
+
+  vballCtx.strokeStyle = "rgba(255,255,255,0.5)";
+  vballCtx.lineWidth = 2;
+  vballCtx.beginPath();
+  vballCtx.arc(vball.x, vball.y, vball.r, 0, Math.PI * 2);
+  vballCtx.stroke();
+
+  if(!vballRunning){
+    vballCtx.fillStyle = "rgba(255,255,255,0.9)";
+    vballCtx.font = "bold 18px 'Baloo 2', sans-serif";
+    vballCtx.textAlign = "center";
+    vballCtx.fillText("Top düştü! Yeniden başla 🏐", w/2, h/2);
+  }
+}
+
+function updateVball(){
+  if(!vballRunning) return;
+  vball.vy += vball.gravity;
+  vball.x += vball.vx;
+  vball.y += vball.vy;
+
+  if(vball.x - vball.r < 0){ vball.x = vball.r; vball.vx *= -1; }
+  if(vball.x + vball.r > vballCanvas.width){ vball.x = vballCanvas.width - vball.r; vball.vx *= -1; }
+
+  const px = vballPlayer.x, py = vballPlayer.y;
+  if(vball.vy > 0 &&
+     vball.y + vball.r >= py && vball.y + vball.r <= py + vballPlayer.h + 10 &&
+     vball.x >= px - vballPlayer.w/2 - 8 && vball.x <= px + vballPlayer.w/2 + 8){
+    vball.vy = -9 - Math.min(vballScore * 0.08, 3);
+    vball.vx += (vball.x - px) * 0.12;
+    vballScore++;
+    vballScoreEl.textContent = `Skor: ${vballScore}`;
+  }
+
+  if(vball.y - vball.r > vballCanvas.height){
+    vballRunning = false;
+  }
+}
+
+function vballLoop(){
+  updateVball();
+  drawVball();
+  vballAnim = requestAnimationFrame(vballLoop);
+}
+
+function bumpVball(e){
+  const rect = vballCanvas.getBoundingClientRect();
+  const scaleX = vballCanvas.width / rect.width;
+  const cx = (e.clientX - rect.left) * scaleX;
+  vballPlayer.x = Math.max(40, Math.min(vballCanvas.width - 40, cx));
+  if(vballRunning && vball.y > vballCanvas.height * 0.45){
+    const dist = Math.abs(vball.x - vballPlayer.x);
+    if(dist < vballPlayer.w){
+      vball.vy = -10 - Math.min(vballScore * 0.06, 2);
+      vball.vx += (vball.x - vballPlayer.x) * 0.15;
+      vballScore++;
+      vballScoreEl.textContent = `Skor: ${vballScore}`;
+    }
+  }
+}
+
+vballCanvas.addEventListener("mousemove", bumpVball);
+vballCanvas.addEventListener("touchmove", e => { e.preventDefault(); bumpVball(e.touches[0]); }, {passive:false});
+vballCanvas.addEventListener("click", bumpVball);
+document.getElementById("vballReset").addEventListener("click", resetVball);
+resetVball();
+vballLoop();
+
+/* ============ RHYTHM / DANCE GAME ============ */
+const RHYTHM_COLORS = ["#2FBF71","#9D5CFF","#FF5FA8","#3E8EFF"];
+const RHYTHM_KEYS = ["ArrowLeft","ArrowDown","ArrowUp","ArrowRight"];
+const rhythmLanesEl = document.getElementById("rhythmLanes");
+const rhythmScoreEl = document.getElementById("rhythmScore");
+let rhythmScore = 0, rhythmCombo = 0, rhythmActive = false;
+let rhythmNotes = [], rhythmSpawnTimer = null, rhythmAnim = null, rhythmLastSpawn = 0;
+
+const rhythmLanes = RHYTHM_COLORS.map((color, i) => {
+  const lane = document.createElement("div");
+  lane.className = "rhythm-lane";
+  lane.innerHTML = `<div class="rhythm-target"></div>`;
+  const btn = document.createElement("button");
+  btn.setAttribute("aria-label", `Şerit ${i+1}`);
+  btn.addEventListener("click", () => hitRhythmLane(i));
+  lane.appendChild(btn);
+  rhythmLanesEl.appendChild(lane);
+  return { el: lane, color, y: -40, noteEl: null };
+});
+
+function spawnRhythmNote(){
+  const laneIdx = Math.floor(Math.random() * rhythmLanes.length);
+  const lane = rhythmLanes[laneIdx];
+  if(lane.noteEl) return;
+  const note = document.createElement("div");
+  note.className = "rhythm-note";
+  note.style.background = lane.color;
+  note.textContent = "💃";
+  lane.el.appendChild(note);
+  lane.noteEl = note;
+  lane.y = -40;
+  rhythmNotes.push({ laneIdx, note, speed: 2.2 + Math.random() * 0.8 });
+}
+
+function hitRhythmLane(idx){
+  if(!rhythmActive) return;
+  const lane = rhythmLanes[idx];
+  if(!lane.noteEl) { rhythmCombo = 0; updateRhythmUI(); return; }
+  const targetY = lane.el.clientHeight - 28 - 18;
+  const diff = Math.abs(lane.y - targetY);
+  if(diff < 28){
+    rhythmScore += 10 + rhythmCombo;
+    rhythmCombo++;
+    lane.el.classList.add("hit");
+    setTimeout(()=> lane.el.classList.remove("hit"), 250);
+    lane.noteEl.remove();
+    lane.noteEl = null;
+    lane.y = -40;
+    rhythmNotes = rhythmNotes.filter(n => n.laneIdx !== idx);
+  } else {
+    rhythmCombo = 0;
+  }
+  updateRhythmUI();
+}
+
+function updateRhythmUI(){
+  rhythmScoreEl.textContent = `Skor: ${rhythmScore} · Combo: ${rhythmCombo}`;
+}
+
+function rhythmLoop(ts){
+  if(!rhythmActive){ rhythmAnim = requestAnimationFrame(rhythmLoop); return; }
+  if(ts - rhythmLastSpawn > 900 - Math.min(rhythmScore, 400)){
+    spawnRhythmNote();
+    rhythmLastSpawn = ts;
+  }
+  rhythmNotes.forEach(n => {
+    n.lane.y += n.speed;
+    n.note.style.top = n.lane.y + "px";
+    const targetY = n.lane.el.clientHeight - 28 - 18;
+    if(n.lane.y > n.lane.el.clientHeight + 20){
+      n.note.remove();
+      n.lane.noteEl = null;
+      n.lane.y = -40;
+      rhythmCombo = 0;
+      updateRhythmUI();
+    }
+  });
+  rhythmNotes = rhythmNotes.filter(n => n.lane.noteEl);
+  rhythmAnim = requestAnimationFrame(rhythmLoop);
+}
+
+function startRhythm(){
+  rhythmActive = true;
+  rhythmScore = 0;
+  rhythmCombo = 0;
+  rhythmNotes = [];
+  rhythmLanes.forEach(l => { if(l.noteEl){ l.noteEl.remove(); l.noteEl = null; } l.y = -40; });
+  updateRhythmUI();
+  document.getElementById("rhythmStart").textContent = "Dur ⏸";
+}
+
+function stopRhythm(){
+  rhythmActive = false;
+  document.getElementById("rhythmStart").textContent = "Başla ▶";
+}
+
+document.getElementById("rhythmStart").addEventListener("click", ()=>{
+  rhythmActive ? stopRhythm() : startRhythm();
+});
+
+document.addEventListener("keydown", e => {
+  const idx = RHYTHM_KEYS.indexOf(e.code);
+  if(idx >= 0){ e.preventDefault(); hitRhythmLane(idx); }
+});
+
+rhythmAnim = requestAnimationFrame(rhythmLoop);
+
+/* ============ PAINTING CANVAS ============ */
+const canvas = document.getElementById("paintCanvas");
+const ctx = canvas.getContext("2d");
+
+function drawPaintTemplate(){
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle = "rgba(27,18,51,0.08)";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8,8]);
+  ctx.strokeRect(40, 30, canvas.width - 80, canvas.height - 60);
+  ctx.setLineDash([]);
+  ctx.font = "800 22px 'Baloo 2', sans-serif";
+  ctx.fillStyle = "rgba(27,18,51,0.12)";
+  ctx.textAlign = "center";
+  ctx.fillText("MANİFEST KARTIM", canvas.width/2, 58);
+}
+drawPaintTemplate();
+
+const PALETTE = ["#1B1233","#2FBF71","#9D5CFF","#FF5FA8","#3E8EFF","#FF4757","#FFC93C","#ffffff"];
+const toolbar = document.getElementById("paintToolbar");
+let currentColor = PALETTE[0];
+PALETTE.forEach((c,i)=>{
+  const s = document.createElement("button");
+  s.className = "swatch" + (i===0 ? " active" : "");
+  s.style.background = c;
+  s.addEventListener("click", ()=>{
+    currentColor = c;
+    toolbar.querySelectorAll(".swatch").forEach(el=>el.classList.remove("active"));
+    s.classList.add("active");
+  });
+  toolbar.appendChild(s);
+});
+
+const brushSize = document.getElementById("brushSize");
+let drawing = false;
+
+function getPos(e){
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return { x:(clientX-rect.left)*scaleX, y:(clientY-rect.top)*scaleY };
+}
+function startDraw(e){
+  drawing = true;
+  const p = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x,p.y);
+  ctx.lineWidth = brushSize.value;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = currentColor;
+  ctx.lineTo(p.x,p.y);
+  ctx.stroke();
+  e.preventDefault();
+}
+function moveDraw(e){
+  if(!drawing) return;
+  const p = getPos(e);
+  ctx.lineWidth = brushSize.value;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = currentColor;
+  ctx.lineTo(p.x,p.y);
+  ctx.stroke();
+  e.preventDefault();
+}
+function endDraw(){ drawing = false; }
+
+["mousedown","touchstart"].forEach(ev => canvas.addEventListener(ev, startDraw));
+["mousemove","touchmove"].forEach(ev => canvas.addEventListener(ev, moveDraw, {passive:false}));
+["mouseup","mouseleave","touchend"].forEach(ev => canvas.addEventListener(ev, endDraw));
+
+document.getElementById("clearCanvas").addEventListener("click", drawPaintTemplate);
+document.getElementById("downloadCanvas").addEventListener("click", ()=>{
+  const link = document.createElement("a");
+  link.download = "manifest-kartim.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+});
+
+/* ============ SONG OF THE DAY ============ */
+const daySong = SONGS[(new Date().getDate() + new Date().getMonth() * 31) % SONGS.length];
+document.getElementById("songBanner").innerHTML =
+  `${daySong.emoji} Günün Şarkısı: <strong>${daySong.title}</strong> — bugün bunu dinle! 🎧`;
+
+/* ============ NAV TOGGLE ============ */
+const navToggle = document.getElementById("navToggle");
+const navLinks = document.getElementById("navLinks");
+navToggle.addEventListener("click", ()=> navLinks.classList.toggle("open"));
+navLinks.querySelectorAll("a").forEach(a => a.addEventListener("click", ()=> navLinks.classList.remove("open")));
+
+/* ============ STARS (hero background) ============ */
+const starsWrap = document.getElementById("stars");
+for(let i=0;i<40;i++){
+  const s = document.createElement("div");
+  const size = Math.random()*2 + 1;
+  s.style.cssText = `position:absolute; width:${size}px; height:${size}px; border-radius:50%; background:#fff;
+    left:${Math.random()*100}%; top:${Math.random()*100}%; opacity:${Math.random()*0.7+0.2};`;
+  starsWrap.appendChild(s);
+}
+
+/* ============ SECRET EASTER EGG ============ */
+const secretHeart = document.getElementById("secretHeart");
+const secretModal = document.getElementById("secretModal");
+document.getElementById("closeSecret").addEventListener("click", ()=> secretModal.classList.remove("show"));
+secretModal.addEventListener("click", e => { if(e.target === secretModal) secretModal.classList.remove("show"); });
+let heartClicks = 0;
+secretHeart.addEventListener("click", ()=>{
+  heartClicks++;
+  if(heartClicks >= 3){
+    heartClicks = 0;
+    secretModal.classList.add("show");
+    launchConfetti();
+  }
+});
+
+function launchConfetti(){
+  const colors = ["#2FBF71","#9D5CFF","#FF5FA8","#3E8EFF","#FF4757","#FFC93C"];
+  for(let i=0;i<40;i++){
+    const c = document.createElement("div");
+    c.className = "confetti";
+    const size = Math.random()*8+6;
+    c.style.width = size+"px";
+    c.style.height = size*0.4+"px";
+    c.style.left = Math.random()*100+"vw";
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.transform = `rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(c);
+    const duration = Math.random()*1500+2000;
+    c.animate([
+      { transform: c.style.transform, top:"-10px" },
+      { transform: `rotate(${Math.random()*720}deg)`, top:"105vh" }
+    ], { duration, easing:"ease-in" }).onfinish = () => c.remove();
+  }
+}
+
+/* ============ SECRET URL / HIDDEN PATH ============ */
+function checkSecretEntry(){
+  const params = new URLSearchParams(window.location.search);
+  const hash = window.location.hash.replace("#","");
+  const isSecret = params.get("gizli") === "manifest" || hash === "gizli" || params.get("fan") === "lila";
+  if(isSecret){
+    setTimeout(()=>{
+      secretModal.classList.add("show");
+      launchConfetti();
+      const box = document.querySelector(".secret-box p");
+      if(box) box.textContent = "Gizli yolu buldun! Bu senin kendi küçük dünyan — dans et, boya yap, hayal kur. Hepsi senin renginle daha güzel 💜";
+    }, 600);
+  }
+}
+checkSecretEntry();
+</script>
+</body>
+</html>
