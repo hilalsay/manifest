@@ -341,7 +341,17 @@ section.block{padding:76px 0;}
 @keyframes rhythmFlash{0%,100%{opacity:1;} 50%{opacity:0.3; transform:scaleY(2);}}
 .rhythm-keys{
   display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:10px;
-  font-family:var(--mono); font-size:0.68rem; text-align:center; color:var(--ink-soft);
+}
+.rhythm-key-btn{
+  --lane-color: var(--hilal);
+  font-family:var(--mono); font-size:0.72rem; font-weight:700; text-align:center;
+  color:var(--ink-soft); background:var(--paper); border:2px solid var(--card-line);
+  border-radius:12px; padding:14px 6px; min-height:48px; touch-action:manipulation;
+  user-select:none; -webkit-tap-highlight-color:transparent; transition:transform .08s, background .08s, border-color .08s;
+}
+.rhythm-key-btn:hover{border-color:var(--lane-color); color:var(--ink);}
+.rhythm-key-btn:active{
+  transform:scale(0.94); background:var(--lane-color); color:#fff; border-color:var(--lane-color);
 }
 .win-msg{
   text-align:center; font-weight:800; margin-top:16px; color:var(--sueda); display:none;

@@ -9,6 +9,7 @@ export function initRitimGame() {
   const loopBtn = document.getElementById('ritim-loop');
   const pickerRoot = document.getElementById('ritim-song-picker');
   const nowPlayingEl = document.getElementById('ritim-now-playing');
+  const tapButtonsRoot = document.getElementById('ritim-tap-buttons');
 
   if (!lanesRoot || !scoreEl || !statusEl || !startBtn) return;
 
@@ -141,6 +142,26 @@ export function initRitimGame() {
       lanesRoot.appendChild(laneEl);
 
       laneEl.addEventListener('pointerdown', () => registerHit(lane.index));
+    });
+  }
+
+  function buildTapButtons() {
+    if (!tapButtonsRoot) return;
+    tapButtonsRoot.innerHTML = '';
+
+    lanes.forEach((lane) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'rhythm-key-btn';
+      btn.style.setProperty('--lane-color', lane.color);
+      btn.textContent = lane.name;
+      btn.setAttribute('aria-label', `${lane.name} şeridine vur`);
+      // pointerdown gives instant feedback (no 300ms tap delay) and works for touch, mouse and pen.
+      btn.addEventListener('pointerdown', (event) => {
+        event.preventDefault();
+        registerHit(lane.index);
+      });
+      tapButtonsRoot.appendChild(btn);
     });
   }
 
@@ -355,6 +376,7 @@ export function initRitimGame() {
   });
 
   buildLanes();
+  buildTapButtons();
   renderTrackPicker();
   updateNowPlaying();
   updateScore();
