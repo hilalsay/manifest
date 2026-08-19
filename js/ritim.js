@@ -41,6 +41,7 @@ export function initRitimGame() {
     noteId: 0,
     trackIndex: 0,
     loop: false,
+    started: false,
   };
 
   function getSelectedTrack() {
@@ -109,6 +110,9 @@ export function initRitimGame() {
     audio.src = getSelectedTrack()?.mp3 || '';
     audio.loop = state.loop;
     audio.load();
+    if (!state.running) {
+      resetRound();
+    }
     if (getSelectedTrack() && !getSelectedTrack().mp3) {
       setStatus(`${getSelectedTrack().title} için MP3 dosyası yok.`, 'miss');
     }
@@ -150,6 +154,7 @@ export function initRitimGame() {
     state.combo = 0;
     state.lastTime = 0;
     state.spawnAccumulator = 0;
+    state.started = false;
     lanes.forEach((lane) => {
       lane.notes.forEach((note) => clearNote(note));
       lane.notes = [];
@@ -199,7 +204,7 @@ export function initRitimGame() {
     if (!closest || closestDistance > HIT_TOLERANCE) {
       state.combo = 0;
       updateScore();
-      setStatus('', 'miss', 1000);
+      setStatus('Kaçırdın!', 'miss', 1000);
       return;
     }
 
@@ -227,7 +232,7 @@ export function initRitimGame() {
           clearNote(note);
           state.combo = 0;
           updateScore();
-          setStatus('', 'miss', 1000);
+          setStatus('Kaçırdın!', 'miss', 1000);
         }
       }
     }
@@ -259,7 +264,7 @@ export function initRitimGame() {
     setStatus('Duraklatıldı', '', 1000);
   }
 
-  function startGame(resetScore = true) {
+  function startGame(resetScore = false) {
     if (!tracks.length) {
       setStatus('Şarkı listesi boş.', 'miss');
       return;
@@ -272,7 +277,7 @@ export function initRitimGame() {
       return;
     }
 
-    if (resetScore) {
+    if (resetScore || !state.started) {
       resetRound();
     }
 
@@ -293,6 +298,7 @@ export function initRitimGame() {
     }
 
     state.running = true;
+    state.started = true;
     state.lastTime = 0;
     state.spawnAccumulator = 0;
     if (startBtn) startBtn.textContent = 'Dur ||';
@@ -311,6 +317,7 @@ export function initRitimGame() {
     const nextIndex = state.trackIndex + offset;
     selectTrack(nextIndex);
     if (state.running) {
+      state.started = false;
       startGame(true);
     }
   }
@@ -318,7 +325,7 @@ export function initRitimGame() {
   if (startBtn) {
     startBtn.addEventListener('click', () => {
       if (state.running) pauseGame();
-      else startGame(true);
+      else startGame(false);
     });
   }
 
