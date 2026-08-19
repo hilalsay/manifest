@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manifest Test</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Mulish:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <span class="eyebrow" style="color:#F4C9E4;">Küçük Test</span>
+        <h1>Hangi Manifest Kızısın?</h1>
+        <p>5 kısa sorudan sonra en çok senin ruh haline benzeyen üyeyi öğrenirsin.</p>
+      </div>
+    </section>
+
+    <section class="block" style="background:var(--paper-alt);">
+      <div class="wrap">
+        <div class="quiz-card">
+          <div class="quiz-progress" id="quizProgress"></div>
+          <div class="quiz-body" id="quizBody">
+            <div class="q-title" id="qTitle"></div>
+            <div class="q-options" id="qOptions"></div>
+          </div>
+          <div class="quiz-result" id="quizResult">
+            <div class="result-badge" id="resultBadge"></div>
+            <div class="result-title" id="resultTitle"></div>
+            <p class="result-fact" id="resultFact"></p>
+            <button class="btn btn-dark retake" id="retakeBtn">Tekrar Çöz 🔁</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>

@@ -430,7 +430,7 @@
         <li><a href="#test">Test</a></li>
         <li><a href="#oyunlar">Oyunlar</a></li>
         <li><a href="#atolye">Atölye</a></li>
-        <li><a href="#kanalim">Kanalım</a></li>
+        <li><a href="#kanalim">Şarkılar</a></li>
       </ul>
     </div>
   </header>
@@ -447,7 +447,7 @@
           <span class="badge">💃 Dans</span>
           <span class="badge">🏐 Voleybol</span>
           <span class="badge">🎨 Resim</span>
-          <span class="badge">🎥 YouTube Shorts</span>
+          <span class="badge">� Manifest Şarkıları</span>
         </div>
         <div class="cta-row">
           <a href="#test" class="btn btn-primary">Hangi Manifest Kızısın? 💫</a>
@@ -595,20 +595,29 @@
     </div>
   </section>
 
-  <!-- ================= CHANNEL ================= -->
+  <!-- ================= MANIFEST SONGS ================= -->
   <section class="block" id="kanalim">
     <div class="wrap">
-      <div class="channel-panel">
-        <div class="channel-info">
-          <span class="eyebrow" style="color:#F4C9E4;">🎥 YouTube</span>
-          <h3>Lilanınavatardunyası</h3>
-          <p>Manifest dans coverları ve shortlarımı paylaştığım kanalım. Yeni videolar için abone olmayı unutma!</p>
-          <div class="cta-row">
-            <a href="https://www.youtube.com/@lilan%C4%B1navatard%C3%BCnyas%C4%B1" target="_blank" rel="noopener" class="btn btn-primary">Kanala Git ▶</a>
-          </div>
+      <div class="block-head">
+        <span class="eyebrow">🎵 Manifest Playlist</span>
+        <h2>Şarkıları Dinle</h2>
+        <p>Manifest grubunun tüm şarkıları burada. İstediğin şarkıyı seçip çal.</p>
+      </div>
+
+      <div class="song-picker" id="manifestPlaylistHome" aria-label="Manifest şarkıları listesi"></div>
+
+      <div class="game-panel">
+        <div class="game-panel-head">
+          <h3>🎧 Şimdi Çalıyor</h3>
+          <span class="arcade-score">Manifest</span>
         </div>
-        <div class="yt-frame-wrap">
-          <iframe src="https://www.youtube.com/embed/videoseries?list=UUO7iQCvfvpl-sY0R-Ikah4Q" title="Kanal videoları" allowfullscreen loading="lazy"></iframe>
+        <div style="padding:18px 16px 8px; text-align:center;">
+          <h3 id="homeNowPlaying" style="margin:0 0 8px;">Şarkı seç</h3>
+          <p id="homeSongStatus" class="rhythm-status" style="margin:0; min-height:1.6em;">Bir şarkı seç, müziği başlat.</p>
+        </div>
+        <div class="memo-controls" style="margin-top:12px;">
+          <button class="btn btn-primary" id="homePlaySelectedSong" type="button">Çal ▶</button>
+          <button class="btn btn-ghost" id="homePauseSelectedSong" type="button">Dur ||</button>
         </div>
       </div>
     </div>

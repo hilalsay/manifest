@@ -1,253 +1,363 @@
-const RHYTHM_COLORS = ["#2FBF71","#9D5CFF","#FF5FA8","#3E8EFF"];
-const RHYTHM_KEYS = ["ArrowLeft","ArrowDown","ArrowUp","ArrowRight"];
-const FALL_TIME = 1.75;
-const HIT_WINDOW = 0.22;
+export function initRitimGame() {
+  const lanesRoot = document.getElementById('ritim-lanes');
+  const scoreEl = document.getElementById('ritim-score');
+  const statusEl = document.getElementById('ritim-status');
+  const startBtn = document.getElementById('ritim-start');
+  const pauseBtn = document.getElementById('ritim-pause');
+  const prevBtn = document.getElementById('ritim-prev');
+  const nextBtn = document.getElementById('ritim-next');
+  const loopBtn = document.getElementById('ritim-loop');
+  const pickerRoot = document.getElementById('ritim-song-picker');
+  const nowPlayingEl = document.getElementById('ritim-now-playing');
 
-let selectedTrack = TRACKS[0];
-let ytPlayer = null;
-let audioEl = null;
-let useMp3 = false;
-let rhythmActive = false;
-let rhythmScore = 0;
-let rhythmCombo = 0;
-let lastSpawnedBeat = -1;
-let activeNotes = [];
-let lanes = [];
-let laneHeight = 200;
-let hitY = 0;
-let animFrame = null;
+  if (!lanesRoot || !scoreEl || !statusEl || !startBtn) return;
 
-function getSongTime(){
-  if(useMp3 && audioEl) return audioEl.currentTime;
-  if(ytPlayer && typeof ytPlayer.getCurrentTime === "function") return ytPlayer.getCurrentTime();
-  return 0;
-}
+  const laneNames = ['Sol', 'Orta 1', 'Orta 2', 'Sağ'];
+  const laneKeys = ['ArrowLeft', 'ArrowDown', 'ArrowUp', 'ArrowRight'];
+  const laneColors = ['#2FBF71', '#9D5CFF', '#FF5FA8', '#3E8EFF'];
+  const HIT_TOLERANCE = 52;
+  const NOTE_BASE_SPEED = 120;
+  const tracks = Array.isArray(TRACKS) ? TRACKS : [];
+  const audio = new Audio();
+  audio.preload = 'none';
 
-function beatInterval(){ return 60 / selectedTrack.bpm; }
+  const lanes = laneColors.map((color, index) => ({
+    index,
+    key: laneKeys[index],
+    name: laneNames[index],
+    color,
+    notes: [],
+    element: null,
+  }));
 
-function buildLanes(){
-  const wrap = document.getElementById("rhythmLanes");
-  wrap.innerHTML = "";
-  lanes = RHYTHM_COLORS.map((color, i) => {
-    const el = document.createElement("div");
-    el.className = "rhythm-lane";
-    el.innerHTML = `<div class="rhythm-target"></div>`;
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.setAttribute("aria-label", `Şerit ${i + 1}`);
-    btn.addEventListener("click", () => hitLane(i));
-    el.appendChild(btn);
-    wrap.appendChild(el);
-    return { el, color, i };
-  });
-  laneHeight = lanes[0]?.el.clientHeight || 200;
-  hitY = laneHeight - 46;
-}
+  const state = {
+    running: false,
+    score: 0,
+    combo: 0,
+    lastTime: 0,
+    spawnAccumulator: 0,
+    spawnInterval: 1.2,
+    animationId: null,
+    noteId: 0,
+    trackIndex: 0,
+    loop: false,
+  };
 
-function spawnNote(beatIndex){
-  const laneIdx = beatIndex % 4;
-  const lane = lanes[laneIdx];
-  const hitTime = selectedTrack.startAt + beatIndex * beatInterval();
-  const note = document.createElement("div");
-  note.className = "rhythm-note";
-  note.style.background = lane.color;
-  note.textContent = "💃";
-  note.style.top = "-40px";
-  lane.el.appendChild(note);
-  activeNotes.push({ laneIdx, lane, note, hitTime, hit: false });
-}
-
-function updateNotePositions(songTime){
-  activeNotes.forEach(n => {
-    if(n.hit) return;
-    const timeUntil = n.hitTime - songTime;
-    const progress = 1 - timeUntil / FALL_TIME;
-    const y = -40 + progress * (hitY + 40);
-    n.note.style.top = `${y}px`;
-    if(timeUntil < -HIT_WINDOW && !n.hit){
-      n.hit = true;
-      n.note.remove();
-      rhythmCombo = 0;
-      flashLane(n.laneIdx, "miss");
-      setStatus("Kaçırdın!", "miss");
-      updateScoreUI();
-    }
-  });
-  activeNotes = activeNotes.filter(n => n.note.isConnected);
-}
-
-function spawnBeats(songTime){
-  const currentBeat = Math.floor((songTime - selectedTrack.startAt) / beatInterval());
-  const lookAhead = Math.ceil(FALL_TIME / beatInterval()) + 1;
-  for(let b = lastSpawnedBeat + 1; b <= currentBeat + lookAhead; b++){
-    if(b < 0) continue;
-    lastSpawnedBeat = b;
-    spawnNote(b);
+  function getSelectedTrack() {
+    return tracks[state.trackIndex] || tracks[0] || null;
   }
-}
 
-function hitLane(idx){
-  if(!rhythmActive) return;
-  const songTime = getSongTime();
-  let best = null;
-  let bestDiff = Infinity;
-  activeNotes.forEach(n => {
-    if(n.laneIdx !== idx || n.hit) return;
-    const diff = Math.abs(songTime - n.hitTime);
-    if(diff < bestDiff){ bestDiff = diff; best = n; }
-  });
-  if(!best || bestDiff > HIT_WINDOW){
-    rhythmCombo = 0;
-    flashLane(idx, "miss");
-    setStatus("Erken veya geç!", "miss");
-    updateScoreUI();
-    return;
+  function updateScore() {
+    scoreEl.textContent = `Skor: ${state.score} · Combo: ${state.combo}`;
   }
-  best.hit = true;
-  best.note.remove();
-  if(bestDiff < 0.1){
-    rhythmScore += 20 + rhythmCombo * 2;
-    rhythmCombo++;
-    flashLane(idx, "perfect");
-    setStatus("Mükemmel! ✨", "perfect");
-  } else {
-    rhythmScore += 10 + rhythmCombo;
-    rhythmCombo++;
-    flashLane(idx, "perfect");
-    setStatus("Güzel! 💃", "perfect");
+
+  function clearStatus() {
+    clearTimeout(statusEl._flashTimer);
+    statusEl.textContent = '';
+    statusEl.className = 'rhythm-status';
   }
-  updateScoreUI();
-}
 
-function flashLane(idx, type){
-  const lane = lanes[idx].el;
-  lane.classList.remove("hit","perfect","miss");
-  lane.classList.add(type === "perfect" ? "perfect" : "miss");
-  setTimeout(() => lane.classList.remove("hit","perfect","miss"), 200);
-}
-
-function setStatus(msg, cls){
-  const el = document.getElementById("rhythmStatus");
-  el.textContent = msg;
-  el.className = "rhythm-status " + (cls || "");
-}
-
-function updateScoreUI(){
-  document.getElementById("rhythmScore").textContent = `Skor: ${rhythmScore} · Combo: ${rhythmCombo}`;
-}
-
-function stopAudio(){
-  if(audioEl){ audioEl.pause(); audioEl.currentTime = 0; }
-  if(ytPlayer && typeof ytPlayer.stopVideo === "function") ytPlayer.stopVideo();
-}
-
-async function startAudio(){
-  useMp3 = false;
-  if(selectedTrack.mp3){
-    try {
-      audioEl = new Audio(selectedTrack.mp3);
-      await audioEl.play();
-      useMp3 = true;
+  function setStatus(message, type = '', timeoutMs = 0) {
+    if (!message) {
+      clearStatus();
       return;
-    } catch(e){ /* YouTube'a düş */ }
+    }
+
+    statusEl.textContent = message;
+    statusEl.className = 'rhythm-status';
+    if (type) statusEl.classList.add(type);
+
+    if (timeoutMs > 0) {
+      clearTimeout(statusEl._flashTimer);
+      statusEl._flashTimer = setTimeout(() => {
+        clearStatus();
+      }, timeoutMs);
+    }
   }
-  if(!ytPlayer){
-    setStatus("YouTube yükleniyor…");
-    return false;
+
+  function updateNowPlaying() {
+    const track = getSelectedTrack();
+    if (!nowPlayingEl) return;
+    nowPlayingEl.textContent = track ? `${track.emoji} ${track.title}` : 'Şarkı seç';
   }
-  ytPlayer.loadVideoById({
-    videoId: selectedTrack.youtubeId,
-    startSeconds: selectedTrack.startAt
-  });
-  ytPlayer.playVideo();
-  return true;
-}
 
-function startRhythm(){
-  rhythmActive = true;
-  rhythmScore = 0;
-  rhythmCombo = 0;
-  lastSpawnedBeat = -1;
-  activeNotes = [];
-  lanes.forEach(l => l.el.querySelectorAll(".rhythm-note").forEach(n => n.remove()));
-  updateScoreUI();
-  setStatus("Müzik başlıyor — ritme uy!");
-  startAudio();
-  document.getElementById("rhythmStart").textContent = "Dur ⏸";
-}
+  function renderTrackPicker() {
+    if (!pickerRoot) return;
+    pickerRoot.innerHTML = '';
 
-function stopRhythm(){
-  rhythmActive = false;
-  stopAudio();
-  activeNotes.forEach(n => n.note.remove());
-  activeNotes = [];
-  document.getElementById("rhythmStart").textContent = "Başla ▶";
-  setStatus("Durdu.");
-}
-
-function rhythmLoop(){
-  if(rhythmActive){
-    const t = getSongTime();
-    spawnBeats(t);
-    updateNotePositions(t);
-    if(useMp3 && audioEl && audioEl.ended) stopRhythm();
-    if(!useMp3 && ytPlayer && ytPlayer.getPlayerState && ytPlayer.getPlayerState() === YT.PlayerState.ENDED) stopRhythm();
-  }
-  animFrame = requestAnimationFrame(rhythmLoop);
-}
-
-function buildSongPicker(){
-  const picker = document.getElementById("songPicker");
-  TRACKS.forEach((track, i) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "song-pick" + (i === 0 ? " active" : "");
-    btn.textContent = `${track.emoji} ${track.title}`;
-    btn.addEventListener("click", () => {
-      if(rhythmActive) stopRhythm();
-      selectedTrack = track;
-      picker.querySelectorAll(".song-pick").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      if(ytPlayer && !track.mp3){
-        ytPlayer.cueVideoById({ videoId: track.youtubeId, startSeconds: track.startAt });
-      }
+    tracks.forEach((track, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'song-pick';
+      if (index === state.trackIndex) button.classList.add('active');
+      button.textContent = `${track.emoji} ${track.title}`;
+      button.addEventListener('click', () => {
+        selectTrack(index);
+        if (state.running) {
+          startGame(true);
+        }
+      });
+      pickerRoot.appendChild(button);
     });
-    picker.appendChild(btn);
-  });
-}
+  }
 
-window.onYouTubeIframeAPIReady = function(){
-  ytPlayer = new YT.Player("ytPlayer", {
-    height: "100%",
-    width: "100%",
-    videoId: selectedTrack.youtubeId,
-    playerVars: {
-      autoplay: 0,
-      controls: 1,
-      modestbranding: 1,
-      rel: 0,
-      playsinline: 1
+  function selectTrack(index) {
+    if (!tracks.length) return;
+    state.trackIndex = (index + tracks.length) % tracks.length;
+    updateNowPlaying();
+    renderTrackPicker();
+    audio.src = getSelectedTrack()?.mp3 || '';
+    audio.loop = state.loop;
+    audio.load();
+    if (getSelectedTrack() && !getSelectedTrack().mp3) {
+      setStatus(`${getSelectedTrack().title} için MP3 dosyası yok.`, 'miss');
+    }
+  }
+
+  function buildLanes() {
+    lanesRoot.innerHTML = '';
+
+    lanes.forEach((lane) => {
+      const laneEl = document.createElement('div');
+      laneEl.className = 'rhythm-lane';
+      laneEl.dataset.index = String(lane.index);
+      laneEl.setAttribute('role', 'button');
+      laneEl.setAttribute('aria-label', `${lane.name} şeridi`);
+
+      const target = document.createElement('div');
+      target.className = 'rhythm-target';
+      laneEl.appendChild(target);
+
+      const label = document.createElement('span');
+      label.className = 'ritim-lane-label';
+      label.textContent = lane.name;
+      laneEl.appendChild(label);
+
+      lane.element = laneEl;
+      lanesRoot.appendChild(laneEl);
+
+      laneEl.addEventListener('pointerdown', () => registerHit(lane.index));
+    });
+  }
+
+  function clearNote(noteMeta) {
+    if (!noteMeta || !noteMeta.element) return;
+    noteMeta.element.remove();
+  }
+
+  function resetRound() {
+    state.score = 0;
+    state.combo = 0;
+    state.lastTime = 0;
+    state.spawnAccumulator = 0;
+    lanes.forEach((lane) => {
+      lane.notes.forEach((note) => clearNote(note));
+      lane.notes = [];
+    });
+    clearStatus();
+    updateScore();
+  }
+
+  function spawnNote() {
+    const lane = lanes[Math.floor(Math.random() * lanes.length)];
+    const note = document.createElement('div');
+    note.className = 'rhythm-note';
+    note.style.background = lane.color;
+    note.textContent = '✦';
+    note.style.left = '50%';
+
+    const noteMeta = {
+      id: ++state.noteId,
+      laneIndex: lane.index,
+      y: -30,
+      speed: NOTE_BASE_SPEED + Math.random() * 30,
+      element: note,
+      hit: false,
+    };
+
+    lane.notes.push(noteMeta);
+    lane.element.appendChild(note);
+  }
+
+  function registerHit(laneIndex) {
+    if (!state.running) return;
+
+    const lane = lanes[laneIndex];
+    const targetY = lane.element.clientHeight - 28;
+    let closest = null;
+    let closestDistance = Infinity;
+
+    for (const note of lane.notes) {
+      if (note.hit) continue;
+      const distance = Math.abs(note.y - targetY);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closest = note;
+      }
+    }
+
+    if (!closest || closestDistance > HIT_TOLERANCE) {
+      state.combo = 0;
+      updateScore();
+      setStatus('', 'miss', 1000);
+      return;
+    }
+
+    closest.hit = true;
+    clearNote(closest);
+    lane.notes = lane.notes.filter((note) => note !== closest);
+
+    const points = 10 + state.combo * 5;
+    state.score += points;
+    state.combo += 1;
+    updateScore();
+    setStatus('Vuruldu! ✨', 'perfect', 1000);
+  }
+
+  function updateNotes(deltaSeconds) {
+    for (const lane of lanes) {
+      for (const note of [...lane.notes]) {
+        note.y += note.speed * deltaSeconds;
+        note.element.style.top = `${note.y}px`;
+
+        const targetY = lane.element.clientHeight - 28;
+        if (note.y > targetY + 40) {
+          note.hit = true;
+          lane.notes = lane.notes.filter((item) => item !== note);
+          clearNote(note);
+          state.combo = 0;
+          updateScore();
+          setStatus('', 'miss', 1000);
+        }
+      }
+    }
+  }
+
+  function gameLoop(timestamp) {
+    if (!state.running) return;
+
+    if (!state.lastTime) state.lastTime = timestamp;
+    const delta = (timestamp - state.lastTime) / 1000;
+    state.lastTime = timestamp;
+
+    state.spawnAccumulator += delta;
+    if (state.spawnAccumulator >= state.spawnInterval) {
+      state.spawnAccumulator = 0;
+      spawnNote();
+    }
+
+    updateNotes(delta);
+    state.animationId = requestAnimationFrame(gameLoop);
+  }
+
+  function pauseGame() {
+    state.running = false;
+    if (state.animationId) cancelAnimationFrame(state.animationId);
+    state.animationId = null;
+    if (startBtn) startBtn.textContent = 'Başlat ▶';
+    audio.pause();
+    setStatus('Duraklatıldı', '', 1000);
+  }
+
+  function startGame(resetScore = true) {
+    if (!tracks.length) {
+      setStatus('Şarkı listesi boş.', 'miss');
+      return;
+    }
+
+    const currentTrack = getSelectedTrack();
+
+    if (!currentTrack) {
+      setStatus('Önce bir şarkı seç.', 'miss');
+      return;
+    }
+
+    if (resetScore) {
+      resetRound();
+    }
+
+    if (audio.src && audio.src.endsWith(currentTrack.mp3 || '')) {
+      audio.loop = state.loop;
+      audio.play().catch(() => {
+        setStatus('Tarayıcı otomatik çalmayı engelledi. Başlat’a tekrar bas.', 'miss');
+      });
+    } else if (currentTrack.mp3) {
+      audio.src = currentTrack.mp3;
+      audio.loop = state.loop;
+      audio.load();
+      audio.play().catch(() => {
+        setStatus('Tarayıcı otomatik çalmayı engelledi. Başlat’a tekrar bas.', 'miss');
+      });
+    } else {
+      setStatus(`${currentTrack.title} için MP3 dosyası yok.`, 'miss');
+    }
+
+    state.running = true;
+    state.lastTime = 0;
+    state.spawnAccumulator = 0;
+    if (startBtn) startBtn.textContent = 'Dur ||';
+    setStatus('Oyun başladı — ritme uy!', '', 1200);
+    state.animationId = requestAnimationFrame(gameLoop);
+  }
+
+  function toggleLoop() {
+    state.loop = !state.loop;
+    audio.loop = state.loop;
+    if (loopBtn) loopBtn.textContent = `Loop: ${state.loop ? 'Açık' : 'Kapalı'}`;
+    setStatus(state.loop ? 'Loop açık.' : 'Loop kapalı.');
+  }
+
+  function goToTrack(offset) {
+    const nextIndex = state.trackIndex + offset;
+    selectTrack(nextIndex);
+    if (state.running) {
+      startGame(true);
+    }
+  }
+
+  if (startBtn) {
+    startBtn.addEventListener('click', () => {
+      if (state.running) pauseGame();
+      else startGame(true);
+    });
+  }
+
+  if (pauseBtn) {
+    pauseBtn.addEventListener('click', () => pauseGame());
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => goToTrack(-1));
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => goToTrack(1));
+  }
+
+  if (loopBtn) {
+    loopBtn.addEventListener('click', toggleLoop);
+    loopBtn.textContent = 'Loop: Kapalı';
+  }
+
+  document.addEventListener('keydown', (event) => {
+    const laneIndex = laneKeys.indexOf(event.code);
+    if (laneIndex >= 0) {
+      event.preventDefault();
+      registerHit(laneIndex);
     }
   });
-};
 
-document.addEventListener("DOMContentLoaded", () => {
-  initSite("oyunlar");
   buildLanes();
-  buildSongPicker();
-  document.getElementById("rhythmStart").addEventListener("click", () => {
-    rhythmActive ? stopRhythm() : startRhythm();
-  });
-  document.addEventListener("keydown", e => {
-    const idx = RHYTHM_KEYS.indexOf(e.code);
-    if(idx >= 0){ e.preventDefault(); hitLane(idx); }
-  });
-  window.addEventListener("resize", () => {
-    buildLanes();
-  });
-  requestAnimationFrame(rhythmLoop);
+  renderTrackPicker();
+  updateNowPlaying();
+  updateScore();
+  clearStatus();
+  if (loopBtn) loopBtn.textContent = 'Loop: Kapalı';
+}
 
-  const tag = document.createElement("script");
-  tag.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(tag);
-});
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initRitimGame);
+} else {
+  initRitimGame();
+}
+

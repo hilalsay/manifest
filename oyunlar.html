@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manifest Oyunlar</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Mulish:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <span class="eyebrow" style="color:#F4C9E4;">Oyun Kutusu</span>
+        <h1>Manifest eğlencesi</h1>
+        <p>Hafıza, voleybol ve ritim oyunlarıyla küçük bir dans sahnesi kuruyorsun.</p>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="wrap">
+        <div class="games-grid">
+          <div class="game-panel">
+            <div class="game-panel-head">
+              <h3>🧠 Renk Hafıza Oyunu</h3>
+              <span class="stat" id="memoStat">Hamle: 0 · Süre: 0:00</span>
+            </div>
+            <div class="memo-grid" id="memoGrid"></div>
+            <p class="win-msg" id="memoWin">Harika iş! Tüm çiftleri buldun 🎉</p>
+            <div class="memo-controls">
+              <button class="btn btn-dark" id="memoReset">Yeniden Karıştır 🔀</button>
+            </div>
+          </div>
+
+          <div class="game-panel">
+            <div class="game-panel-head">
+              <h3>💃 Dans Ritmi</h3>
+              <span class="arcade-score" id="ritim-score">Skor: 0 · Combo: 0</span>
+            </div>
+
+            <div class="song-picker" id="ritim-song-picker" aria-label="Manifest şarkıları listesi"></div>
+
+            <div class="game-panel-head" style="margin-top:12px; margin-bottom:8px;">
+              <h4 style="margin:0; font-size:1rem;">🎧 Şarkı</h4>
+              <span class="arcade-score" id="ritim-now-playing">Şarkı seç</span>
+            </div>
+
+            <div class="rhythm-wrap">
+              <div class="rhythm-lanes" id="ritim-lanes"></div>
+              <div class="rhythm-keys">
+                <span>← Sol</span><span>↓ Orta</span><span>↑ Orta</span><span>→ Sağ</span>
+              </div>
+              <p class="rhythm-status" id="ritim-status">Hazır.</p>
+            </div>
+            <p class="arcade-hint">Şarkıyı seç, başlat, sonra ritme zamanında bas!</p>
+            <div class="memo-controls" style="flex-wrap:wrap;">
+              <button class="btn btn-dark" id="ritim-prev" type="button">⏮ Önceki</button>
+              <button class="btn btn-dark" id="ritim-start" type="button">Başlat ▶</button>
+              <button class="btn btn-dark" id="ritim-pause" type="button">Durdur ||</button>
+              <button class="btn btn-dark" id="ritim-next" type="button">Sonraki ⏭</button>
+              <button class="btn btn-dark" id="ritim-loop" type="button">Loop: Kapalı</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/hafiza.js"></script>
+  <script type="module">
+    import { initRitimGame } from './js/ritim.js';
+    initRitimGame();
+  </script>
+</body>
+</html>

@@ -1,5 +1,7 @@
-document.addEventListener("DOMContentLoaded", () => {
-  initSite("home");
-  initStars("stars");
-  initSongBanner("songBanner");
-});
+(function(){
+  document.addEventListener("DOMContentLoaded", () => {
+    initSite("home");
+    initStars("stars");
+    initSongBanner("songBanner");
+  });
+})();

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manifest Atölye</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Mulish:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <span class="eyebrow" style="color:#F4C9E4;">Sanat Atölyesi</span>
+        <h1>Manifest kartını çiz</h1>
+        <p>Renk seç, fırça boyutunu ayarla ve küçük bir girişim çizimi yap.</p>
+      </div>
+    </section>
+
+    <section class="block" style="background:var(--paper-alt);">
+      <div class="wrap">
+        <div class="game-panel">
+          <div class="paint-toolbar" id="paintToolbar">
+            <span style="font-family:var(--mono); font-size:0.75rem; font-weight:700;">RENK:</span>
+          </div>
+          <div class="paint-toolbar">
+            <span style="font-family:var(--mono); font-size:0.75rem; font-weight:700;">FIRÇA:</span>
+            <input type="range" min="2" max="28" value="8" id="brushSize" />
+          </div>
+          <canvas id="paintCanvas" width="640" height="380"></canvas>
+          <div class="paint-actions">
+            <button class="btn btn-ghost" style="background:var(--paper); color:var(--ink); border:2px solid var(--card-line);" id="clearCanvas">Temizle 🧽</button>
+            <button class="btn btn-primary" id="downloadCanvas">İndir 💾</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/atolye.js"></script>
+</body>
+</html>

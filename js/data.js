@@ -23,12 +23,15 @@ const SONGS = [
   { title:"Başrol Sensin", emoji:"🎬" },
 ];
 
-/** Ritim oyunu şarkıları — mp3 dosyası varsa YouTube yerine o çalar (audio/ klasörüne koy) */
+/** Ritim oyunu şarkıları — MP3 varsa audio/ klasöründen çalar. */
 const TRACKS = [
-  { id:"zamansizdik", title:"Zamansızdık", emoji:"⏳", youtubeId:"TWo7ktEPxSg", mp3:null, bpm:122, startAt:0 },
-  { id:"ariyo",       title:"Arıyo",      emoji:"📞", youtubeId:"yQ9lXHfv9Yg", mp3:null, bpm:128, startAt:0 },
-  { id:"snap",        title:"Snap",       emoji:"📸", youtubeId:"KyQCrV-z4_A", mp3:null, bpm:130, startAt:0 },
-  { id:"kts",         title:"KTS",        emoji:"🔥", youtubeId:"yRqJ6gbkBA0", mp3:null, bpm:126, startAt:0 },
+  { id:"zamansizdik", title:"Zamansızdık", emoji:"⏳", mp3:"audio/zamansizdik.mp3", bpm:122, startAt:0 },
+  { id:"ariyo",       title:"Arıyo",      emoji:"📞", mp3:"audio/ariyo.mp3", bpm:128, startAt:0 },
+  { id:"snap",        title:"Snap",       emoji:"📸", mp3:"audio/snap.mp3", bpm:130, startAt:0 },
+  { id:"kts",         title:"KTS",        emoji:"🔥", mp3:"audio/kts.mp3", bpm:126, startAt:0 },
+  { id:"amator",      title:"Amatör",     emoji:"🎤", mp3:"audio/amator.mp3", bpm:124, startAt:0 },
+  { id:"toz-pembe",   title:"Toz Pembe",  emoji:"🌷", mp3:"audio/toz-pembe.mp3", bpm:120, startAt:0 },
+  { id:"basrol-sensin",title:"Başrol Sensin", emoji:"🎬", mp3:"audio/basrol-sensin.mp3", bpm:127, startAt:0 },
 ];
 
 const QUESTIONS = [
@@ -50,5 +53,5 @@ const NAV_ITEMS = [
   { href:"test.html",    label:"Test",            id:"test" },
   { href:"oyunlar.html", label:"Oyunlar",         id:"oyunlar" },
   { href:"atolye.html",  label:"Atölye",          id:"atolye" },
-  { href:"kanalim.html", label:"Kanalım",         id:"kanalim" },
+  { href:"kanalim.html", label:"Şarkılar",        id:"kanalim" },
 ];

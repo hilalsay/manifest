@@ -1,175 +1,194 @@
-const canvas = document.getElementById("vballCanvas");
-const ctx = canvas.getContext("2d");
+export function initVoleybolGame() {
+  const canvas = document.getElementById('voleybol-canvas');
+  const scoreEl = document.getElementById('voleybol-score');
+  const resetBtn = document.getElementById('voleybol-reset');
 
-const FLOOR_Y = 290;
-const NET_X = 240;
-const GRAVITY = 0.09;
-const MAX_VY = 7;
-const MAX_VX = 3.5;
+  if (!canvas || !scoreEl || !resetBtn) return;
 
-let running = false;
-let score = 0;
-let lastTime = 0;
+  const ctx = canvas.getContext('2d');
+  const ball = {
+    x: canvas.width / 2,
+    y: 40,
+    radius: 18,
+    vx: 0,
+    vy: 0,
+    gravity: 0.30,
+  };
 
-const ball = { x: 240, y: 80, vx: 0.8, vy: 0, r: 16 };
-const paddle = { x: 240, w: 90, h: 14, y: FLOOR_Y - 18 };
+  let score = 0;
+  let running = false;
+  let animationId = null;
 
-function resetGame(){
-  ball.x = canvas.width / 2;
-  ball.y = 70;
-  ball.vx = (Math.random() > 0.5 ? 1 : -1) * (0.6 + Math.random() * 0.4);
-  ball.vy = -1;
-  paddle.x = canvas.width / 2;
-  score = 0;
-  running = true;
-  document.getElementById("vballScore").textContent = "Skor: 0";
-  document.getElementById("vballHint").textContent = "Parmağını veya fareni hareket ettir — topu yere düşürme!";
-}
-
-function drawCourt(){
-  const w = canvas.width, h = canvas.height;
-
-  const sky = ctx.createLinearGradient(0, 0, 0, h);
-  sky.addColorStop(0, "#6EC6FF");
-  sky.addColorStop(1, "#B8E6FF");
-  ctx.fillStyle = sky;
-  ctx.fillRect(0, 0, w, h);
-
-  ctx.fillStyle = "#F4D9A0";
-  ctx.fillRect(0, FLOOR_Y, NET_X, h - FLOOR_Y);
-  ctx.fillStyle = "#A8D4F0";
-  ctx.fillRect(NET_X, FLOOR_Y, w - NET_X, h - FLOOR_Y);
-
-  ctx.strokeStyle = "#fff";
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(NET_X, FLOOR_Y);
-  ctx.lineTo(NET_X, FLOOR_Y - 70);
-  ctx.stroke();
-  for(let i = 0; i < 6; i++){
-    const yy = FLOOR_Y - 10 - i * 12;
-    ctx.beginPath();
-    ctx.moveTo(NET_X - 4, yy);
-    ctx.lineTo(NET_X + 4, yy);
-    ctx.stroke();
+  function updateScore() {
+    scoreEl.textContent = `Skor: ${score}`;
   }
 
-  ctx.strokeStyle = "rgba(255,255,255,0.6)";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(0, FLOOR_Y);
-  ctx.lineTo(w, FLOOR_Y);
-  ctx.stroke();
-}
-
-function drawBall(){
-  const grad = ctx.createRadialGradient(ball.x - 3, ball.y - 3, 1, ball.x, ball.y, ball.r);
-  grad.addColorStop(0, "#fff");
-  grad.addColorStop(0.5, "#FF5FA8");
-  grad.addColorStop(1, "#FF4757");
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(255,255,255,0.7)";
-  ctx.lineWidth = 2;
-  ctx.stroke();
-}
-
-function drawPaddle(){
-  ctx.fillStyle = "rgba(27,18,51,0.75)";
-  ctx.beginPath();
-  ctx.roundRect(paddle.x - paddle.w / 2, paddle.y, paddle.w, paddle.h, 7);
-  ctx.fill();
-  ctx.strokeStyle = "#fff";
-  ctx.lineWidth = 2;
-  ctx.stroke();
-}
-
-function update(dt){
-  if(!running) return;
-
-  ball.vy += GRAVITY * dt;
-  ball.vy = Math.max(-MAX_VY, Math.min(MAX_VY, ball.vy));
-  ball.vx = Math.max(-MAX_VX, Math.min(MAX_VX, ball.vx));
-  ball.vx *= 0.999;
-
-  ball.x += ball.vx * dt;
-  ball.y += ball.vy * dt;
-
-  if(ball.x - ball.r < 8){
-    ball.x = 8 + ball.r;
-    ball.vx = Math.abs(ball.vx) * 0.6;
-  }
-  if(ball.x + ball.r > canvas.width - 8){
-    ball.x = canvas.width - 8 - ball.r;
-    ball.vx = -Math.abs(ball.vx) * 0.6;
+  function resetBall() {
+    ball.x = canvas.width / 2;
+    ball.y = 40;
+    ball.vx = (Math.random() * 2 - 1) * 2.8;
+    ball.vy = 0.6;
   }
 
-  if(ball.y - ball.r < 8){
-    ball.y = 8 + ball.r;
-    ball.vy = Math.abs(ball.vy) * 0.5;
+  function resetGame() {
+    score = 0;
+    running = true;
+    resetBall();
+    updateScore();
+    canvas.dataset.gameOver = 'false';
+    resetBtn.disabled = false;
+    resetBtn.textContent = 'Yeniden Başla';
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = requestAnimationFrame(loop);
   }
 
-  const px = paddle.x, py = paddle.y;
-  if(ball.vy > 0 &&
-     ball.y + ball.r >= py && ball.y - ball.r <= py + paddle.h + 6 &&
-     ball.x >= px - paddle.w / 2 - 6 && ball.x <= px + paddle.w / 2 + 6){
-    ball.y = py - ball.r;
-    ball.vy = -5.5 - Math.min(score * 0.04, 1.5);
-    ball.vx += (ball.x - px) * 0.04;
-    score++;
-    document.getElementById("vballScore").textContent = `Skor: ${score}`;
-  }
-
-  if(ball.y + ball.r > FLOOR_Y + 4){
+  function setGameOver() {
     running = false;
-    document.getElementById("vballHint").textContent = `Top düştü! Skorun: ${score} — yeniden dene 🏐`;
+    canvas.dataset.gameOver = 'true';
+    const hint = document.getElementById('voleybol-hint');
+    if (hint) {
+      hint.textContent = 'Top düştü! Yeniden başla';
+    }
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = null;
+    resetBtn.disabled = false;
   }
-}
 
-function loop(ts){
-  if(!lastTime) lastTime = ts;
-  const dt = Math.min((ts - lastTime) / 16.67, 2);
-  lastTime = ts;
-  update(dt);
-  drawCourt();
-  drawPaddle();
-  drawBall();
-  if(!running && score === 0){
-    ctx.fillStyle = "rgba(27,18,51,0.7)";
-    ctx.font = "bold 16px 'Baloo 2', sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("Başlamak için tıkla!", canvas.width / 2, canvas.height / 2);
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#dff6ff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.strokeStyle = 'rgba(27,18,51,0.18)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height - 30);
+    ctx.lineTo(canvas.width, canvas.height - 30);
+    ctx.stroke();
+
+    const grad = ctx.createRadialGradient(
+      ball.x - 4,
+      ball.y - 6,
+      4,
+      ball.x,
+      ball.y,
+      ball.radius
+    );
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.3, '#ffd1e8');
+    grad.addColorStop(1, '#ff5fa8');
+
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    if (canvas.dataset.gameOver === 'true') {
+      ctx.fillStyle = 'rgba(27,18,51,0.75)';
+      ctx.font = '700 26px "Baloo 2", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Top düştü! Yeniden başla', canvas.width / 2, canvas.height / 2);
+    }
   }
-  requestAnimationFrame(loop);
+
+  function update() {
+    if (!running) return;
+
+    ball.vy += ball.gravity;
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+
+    if (ball.x - ball.radius <= 0) {
+      ball.x = ball.radius;
+      ball.vx = Math.abs(ball.vx) * 0.85;
+    }
+
+    if (ball.x + ball.radius >= canvas.width) {
+      ball.x = canvas.width - ball.radius;
+      ball.vx = -Math.abs(ball.vx) * 0.85;
+    }
+
+    if (ball.y - ball.radius <= 0) {
+      ball.y = ball.radius;
+      ball.vy = Math.abs(ball.vy) * 0.75;
+    }
+
+    if (ball.y + ball.radius >= canvas.height - 30) {
+      setGameOver();
+      return;
+    }
+  }
+
+  function loop() {
+    if (!running) return;
+    update();
+    draw();
+    animationId = requestAnimationFrame(loop);
+  }
+
+  function tryBounce(clientX, clientY) {
+    if (!running) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const pointX = (clientX - rect.left) * scaleX;
+    const pointY = (clientY - rect.top) * scaleY;
+
+    const distance = Math.hypot(pointX - ball.x, pointY - ball.y);
+    if (distance <= ball.radius) {
+      ball.vy = -Math.abs(ball.vy) * 0.9 - 4.5;
+      ball.vx += (Math.random() - 0.5) * 3.5;
+      score += 1;
+      updateScore();
+    }
+  }
+
+  canvas.addEventListener('pointerdown', (event) => {
+    if (!running) {
+      if (canvas.dataset.gameOver === 'true') {
+        resetGame();
+      }
+      return;
+    }
+    tryBounce(event.clientX, event.clientY);
+  });
+
+  canvas.addEventListener('touchstart', (event) => {
+    if (!running) {
+      if (canvas.dataset.gameOver === 'true') {
+        resetGame();
+      }
+      return;
+    }
+    const touch = event.touches[0];
+    if (touch) tryBounce(touch.clientX, touch.clientY);
+    event.preventDefault();
+  }, { passive: false });
+
+  resetBtn.addEventListener('click', () => {
+    resetGame();
+  });
+
+  const hint = document.getElementById('voleybol-hint');
+  if (hint) {
+    hint.textContent = 'Sahaya tıkla veya dokun — topu yakala!';
+  }
+
+  canvas.dataset.gameOver = 'false';
+  resetBall();
+  draw();
+  resetGame();
 }
 
-function movePaddle(clientX){
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  paddle.x = Math.max(paddle.w / 2 + 8, Math.min(canvas.width - paddle.w / 2 - 8, (clientX - rect.left) * scaleX));
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initVoleybolGame);
+} else {
+  initVoleybolGame();
 }
 
-canvas.addEventListener("mousemove", e => { if(running) movePaddle(e.clientX); });
-canvas.addEventListener("touchmove", e => {
-  e.preventDefault();
-  if(running) movePaddle(e.touches[0].clientX);
-}, { passive: false });
-canvas.addEventListener("click", e => {
-  if(!running && score >= 0) resetGame();
-  movePaddle(e.clientX);
-});
-canvas.addEventListener("touchstart", e => {
-  if(!running) resetGame();
-  movePaddle(e.touches[0].clientX);
-}, { passive: true });
-
-document.addEventListener("DOMContentLoaded", () => {
-  initSite("oyunlar");
-  document.getElementById("vballReset").addEventListener("click", resetGame);
-  running = false;
-  score = 0;
-  document.getElementById("vballHint").textContent = "Başla'ya bas veya sahaya dokun!";
-  requestAnimationFrame(loop);
-});
