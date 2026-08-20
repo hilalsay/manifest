@@ -561,20 +561,144 @@ function initPaint() {
   ["mousemove", "touchmove"].forEach((ev) => paintCanvas.addEventListener(ev, moveDraw, { passive: false }));
   ["mouseup", "mouseleave", "touchend"].forEach((ev) => paintCanvas.addEventListener(ev, endDraw));
 
-  document.getElementById("clearCanvas").addEventListener("click", () => paintBackground(currentBg));
-  document.getElementById("downloadCanvas").addEventListener("click", () => {
-    // Çizgi film katmanını ve boyanan katmanı tek bir görsele birleştir.
+  // Çizgi film katmanını ve boyanan katmanı tek bir görsele birleştirir.
+  function mergedDataUrl() {
     const merged = document.createElement("canvas");
     merged.width = paintCanvas.width;
     merged.height = paintCanvas.height;
     const mctx = merged.getContext("2d");
     mctx.drawImage(paintCanvas, 0, 0);
     mctx.drawImage(lineCanvas, 0, 0);
+    return merged.toDataURL("image/png");
+  }
 
+  document.getElementById("clearCanvas").addEventListener("click", () => paintBackground(currentBg));
+  document.getElementById("downloadCanvas").addEventListener("click", () => {
     const link = document.createElement("a");
     link.download = "manifest-kartim.png";
-    link.href = merged.toDataURL("image/png");
+    link.href = mergedDataUrl();
     link.click();
+  });
+
+  const saveBtn = document.getElementById("saveToGallery");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", () => {
+      const ok = addToGallery(mergedDataUrl());
+      if (ok) {
+        saveBtn.textContent = "Kaydedildi! ✅";
+        if (typeof launchSparkleBurst === "function") {
+          const rect = saveBtn.getBoundingClientRect();
+          launchSparkleBurst(rect.left + rect.width / 2, rect.top);
+        }
+      } else {
+        saveBtn.textContent = "Depolama dolu 😕";
+      }
+      setTimeout(() => { saveBtn.textContent = "Galeriye Kaydet 🖼️"; }, 1600);
+    });
+  }
+}
+
+/* ---------- galerim: boyamaları bu tarayıcıda (localStorage) saklar ---------- */
+
+const GALLERY_KEY = "manifestAtolyeGallery";
+const GALLERY_MAX = 30;
+
+function loadGallery() {
+  try {
+    const raw = localStorage.getItem(GALLERY_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list : [];
+  } catch (err) {
+    return [];
+  }
+}
+
+function persistGallery(list) {
+  try {
+    localStorage.setItem(GALLERY_KEY, JSON.stringify(list));
+    return true;
+  } catch (err) {
+    return false; // depolama alanı dolu ya da tarayıcı izin vermiyor
+  }
+}
+
+// Yeni bir boyamayı galeriye ekler; depolama dolarsa en eski kayıtları
+// atarak yeniden dener. Kaydedemezse false döner.
+function addToGallery(dataUrl) {
+  let list = loadGallery();
+  list.unshift({ id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, dataUrl, savedAt: new Date().toISOString() });
+  list = list.slice(0, GALLERY_MAX);
+
+  while (list.length && !persistGallery(list)) {
+    list.pop(); // depolama doluysa en eski kayıttan başlayarak yer aç
+  }
+  renderGallery();
+  return list.length > 0 && list[0].dataUrl === dataUrl;
+}
+
+function deleteFromGallery(id) {
+  const list = loadGallery().filter((item) => item.id !== id);
+  persistGallery(list);
+  renderGallery();
+}
+
+function formatGalleryDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" });
+  } catch (err) {
+    return "";
+  }
+}
+
+function renderGallery() {
+  const grid = document.getElementById("savedGallery");
+  const emptyMsg = document.getElementById("galleryEmptyMsg");
+  if (!grid) return;
+
+  const list = loadGallery();
+  emptyMsg?.classList.toggle("hidden", list.length > 0);
+  grid.innerHTML = "";
+
+  list.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "saved-card";
+
+    const img = document.createElement("img");
+    img.src = item.dataUrl;
+    img.alt = "Kaydedilmiş boyama";
+    card.appendChild(img);
+
+    const date = document.createElement("span");
+    date.className = "saved-card-date";
+    date.textContent = formatGalleryDate(item.savedAt);
+    card.appendChild(date);
+
+    const actions = document.createElement("div");
+    actions.className = "saved-card-actions";
+
+    const dlBtn = document.createElement("button");
+    dlBtn.type = "button";
+    dlBtn.className = "saved-icon-btn";
+    dlBtn.setAttribute("aria-label", "İndir");
+    dlBtn.textContent = "💾";
+    dlBtn.addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.download = "manifest-kartim.png";
+      link.href = item.dataUrl;
+      link.click();
+    });
+    actions.appendChild(dlBtn);
+
+    const delBtn = document.createElement("button");
+    delBtn.type = "button";
+    delBtn.className = "saved-icon-btn";
+    delBtn.setAttribute("aria-label", "Sil");
+    delBtn.textContent = "🗑️";
+    delBtn.addEventListener("click", () => deleteFromGallery(item.id));
+    actions.appendChild(delBtn);
+
+    card.appendChild(actions);
+    grid.appendChild(card);
   });
 }
 
@@ -616,4 +740,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initSite("atolye");
   initPaint();
   initFlowerSnow();
+  renderGallery();
 });

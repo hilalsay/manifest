@@ -93,9 +93,22 @@
           </div>
           <div class="paint-actions">
             <button class="btn btn-ghost" style="background:var(--paper); color:var(--ink); border:2px solid var(--card-line);" id="clearCanvas">Temizle 🧽</button>
+            <button class="btn btn-primary" id="saveToGallery">Galeriye Kaydet 🖼️</button>
             <button class="btn btn-primary" id="downloadCanvas">İndir 💾</button>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="wrap">
+        <div class="block-head">
+          <span class="eyebrow">Galerim</span>
+          <h2>Kaydettiğin Boyamalar</h2>
+          <p>Beğendiğin bir boyamayı "Galeriye Kaydet" ile buraya ekle — bu tarayıcıda saklanır, istediğin zaman gel bak, indir ya da sil.</p>
+        </div>
+        <p class="arcade-hint" id="galleryEmptyMsg">Henüz kaydedilmiş bir boyaman yok.</p>
+        <div class="saved-grid" id="savedGallery"></div>
       </div>
     </section>
   </main>

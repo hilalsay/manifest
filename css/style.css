@@ -565,6 +565,30 @@ section.block{padding:76px 0;}
 .coloring-card span{font-size:0.85rem; font-weight:700; color:var(--ink-soft);}
 .coloring-card:hover{transform:translateY(-3px); border-color:var(--lidya);}
 .coloring-card.active{border-color:var(--hilal); box-shadow:0 10px 22px rgba(157,92,255,0.2);}
+
+/* ---------- KAYDEDİLEN BOYAMALAR GALERİSİ (localStorage) ---------- */
+.saved-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:16px;
+}
+@media (max-width:900px){.saved-grid{grid-template-columns:repeat(3,1fr);}}
+@media (max-width:560px){.saved-grid{grid-template-columns:repeat(2,1fr);}}
+.saved-card{
+  position:relative; background:#fff; border:2px solid var(--card-line); border-radius:18px;
+  padding:10px; display:flex; flex-direction:column; gap:8px; overflow:hidden;
+}
+.saved-card img{width:100%; aspect-ratio:16/9.5; object-fit:cover; border-radius:12px; background:#fdfaf4; display:block;}
+.saved-card-date{font-family:var(--mono); font-size:0.7rem; color:var(--ink-soft); text-align:center;}
+.saved-card-actions{
+  position:absolute; top:16px; right:16px; display:flex; gap:6px;
+  opacity:0; transform:translateY(-4px); transition:.15s;
+}
+.saved-card:hover .saved-card-actions, .saved-card:focus-within .saved-card-actions{opacity:1; transform:translateY(0);}
+.saved-icon-btn{
+  width:30px; height:30px; border-radius:50%; border:none; cursor:pointer; font-size:0.9rem;
+  background:#fff; box-shadow:0 4px 10px rgba(27,18,51,0.25); display:flex; align-items:center; justify-content:center;
+}
+.saved-icon-btn:hover{background:var(--paper-alt);}
+#galleryEmptyMsg.hidden{display:none;}
 .coloring-card.active span{color:var(--ink);}
 
 /* two-layer paint stage: bottom canvas is paintable, top canvas holds the line-art template */
