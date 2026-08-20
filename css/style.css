@@ -378,6 +378,37 @@ section.block{padding:76px 0;}
 }
 .win-msg.show{display:block;}
 
+/* XOX (tic-tac-toe) */
+.xox-grid{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:300px; margin:0 auto;
+}
+.xox-cell{
+  aspect-ratio:1; border-radius:14px; border:2px solid var(--card-line); background:var(--paper);
+  font-family:var(--display); font-weight:800; font-size:2.2rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:.15s;
+}
+.xox-cell:hover:not(.filled){border-color:var(--hilal); background:#fff;}
+.xox-cell.win{background:var(--paper-alt); border-color:var(--esin); box-shadow:0 0 0 3px var(--esin) inset;}
+
+/* Renk Yakala (whack-a-mole) */
+.renk-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:420px; margin:0 auto;
+}
+.renk-hole{
+  aspect-ratio:1; border-radius:50%; background:var(--paper-alt); border:2px solid var(--card-line);
+  cursor:pointer; transition:transform .12s, background .12s; padding:0;
+}
+.renk-hole.active{transform:scale(1.06); box-shadow:0 6px 14px rgba(27,18,51,0.2);}
+.renk-hole.wrong{animation:renkShake .3s;}
+@keyframes renkShake{0%,100%{transform:translateX(0);} 25%{transform:translateX(-4px);} 75%{transform:translateX(4px);}}
+
+/* Yıldız Yakala */
+.yildiz-canvas{
+  width:100%; max-width:420px; height:300px; display:block; margin:0 auto;
+  background:var(--ink); border-radius:16px; border:2px solid var(--card-line);
+  touch-action:none; cursor:pointer;
+}
+
 /* painting canvas */
 .paint-toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:16px;}
 .swatch{
@@ -498,6 +529,25 @@ section.block{padding:76px 0;}
 }
 .bg-swatch.active{box-shadow:0 0 0 3px var(--ink);}
 
+/* ---------- COLORING PAGE GALLERY ---------- */
+.coloring-grid{
+  display:grid; grid-template-columns:repeat(5,1fr); gap:16px;
+}
+@media (max-width:900px){.coloring-grid{grid-template-columns:repeat(3,1fr);}}
+@media (max-width:560px){.coloring-grid{grid-template-columns:repeat(2,1fr);}}
+.coloring-card{
+  background:#fff; border:2px solid var(--card-line); border-radius:18px; padding:10px;
+  cursor:pointer; display:flex; flex-direction:column; gap:8px; align-items:center;
+  font-family:var(--body); transition:.15s;
+}
+.coloring-card img{
+  width:100%; aspect-ratio:1/1; object-fit:contain; border-radius:12px; background:#fdfaf4;
+}
+.coloring-card span{font-size:0.85rem; font-weight:700; color:var(--ink-soft);}
+.coloring-card:hover{transform:translateY(-3px); border-color:var(--lidya);}
+.coloring-card.active{border-color:var(--hilal); box-shadow:0 10px 22px rgba(157,92,255,0.2);}
+.coloring-card.active span{color:var(--ink);}
+
 /* two-layer paint stage: bottom canvas is paintable, top canvas holds the line-art template */
 .paint-stage{position:relative; max-width:640px; margin:0 auto;}
 .paint-stage canvas{
@@ -548,6 +598,13 @@ footer p{color:var(--ink-soft); font-size:0.85rem; margin-top:10px;}
 .confetti{position:fixed; top:-10px; z-index:200; border-radius:2px; pointer-events:none;}
 
 .sparkle-burst{position:fixed; z-index:210; pointer-events:none; line-height:1; will-change:transform,opacity;}
+
+/* flower "snow" — falls along the left/right edges only, never over the content */
+.flower-snow{
+  position:fixed; top:-40px; z-index:5; pointer-events:none; line-height:1;
+  will-change:transform,opacity; filter:drop-shadow(0 2px 3px rgba(27,18,51,0.12));
+}
+@media (max-width:640px){.flower-snow{display:none;}}
 
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}

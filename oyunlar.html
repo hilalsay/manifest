@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Oyunlar | Manifest Dünyam</title>
-  <meta name="description" content="Hafıza ve ritim oyunlarıyla küçük bir dans sahnesi kuruyorsun. Manifest temalı mini oyunları oyna." />
+  <meta name="description" content="Hafıza, ritim, XOX, Renk Yakala ve Yıldız Yakala — Manifest temalı mini oyunları oyna." />
   <link rel="canonical" href="https://manifest.hilalsay.com.tr/oyunlar.html" />
   <meta name="robots" content="index, follow" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Manifest Dünyam" />
   <meta property="og:locale" content="tr_TR" />
   <meta property="og:title" content="Manifest Oyunları" />
-  <meta property="og:description" content="Hafıza ve ritim oyunlarıyla küçük bir dans sahnesi kuruyorsun." />
+  <meta property="og:description" content="Hafıza, ritim, XOX, Renk Yakala ve Yıldız Yakala — Manifest temalı mini oyunları oyna." />
   <meta property="og:url" content="https://manifest.hilalsay.com.tr/oyunlar.html" />
   <meta property="og:image" content="https://manifest.hilalsay.com.tr/img/og-image.png" />
   <meta property="og:image:width" content="1200" />
@@ -31,7 +31,7 @@
       <div class="wrap">
         <span class="eyebrow" style="color:#F4C9E4;">Oyun Kutusu</span>
         <h1>Manifest eğlencesi</h1>
-        <p>Hafıza ve ritim oyunlarıyla küçük bir dans sahnesi kuruyorsun.</p>
+        <p>Hafıza, ritim, XOX, Renk Yakala ve Yıldız Yakala — beş mini oyunla küçük bir eğlence kutusu.</p>
       </div>
     </section>
 
@@ -77,6 +77,44 @@
               <button class="btn btn-dark" id="ritim-loop" type="button">Loop: Kapalı</button>
             </div>
           </div>
+
+          <div class="game-panel">
+            <div class="game-panel-head">
+              <h3>⭕ XOX</h3>
+              <span class="stat" id="xoxStat">Sıra: X</span>
+            </div>
+            <div class="xox-grid" id="xoxGrid"></div>
+            <p class="win-msg" id="xoxWin"></p>
+            <p class="arcade-hint">Aynı cihazdan sırayla oynayın — X: Sueda 🌿, O: Hilal 💜.</p>
+            <div class="memo-controls">
+              <button class="btn btn-dark" id="xoxReset">Yeniden Başla 🔄</button>
+            </div>
+          </div>
+
+          <div class="game-panel">
+            <div class="game-panel-head">
+              <h3>🎯 Renk Yakala</h3>
+              <span class="arcade-score" id="renkStat">Skor: 0 · Süre: 0:30</span>
+            </div>
+            <p class="arcade-hint">Hedef renk: <strong id="renkTarget">—</strong> — sadece o renkte çıkan noktaya, kaybolmadan önce dokun!</p>
+            <div class="renk-grid" id="renkGrid"></div>
+            <p class="win-msg" id="renkWin"></p>
+            <div class="memo-controls">
+              <button class="btn btn-dark" id="renkStart">Başlat ▶</button>
+            </div>
+          </div>
+
+          <div class="game-panel">
+            <div class="game-panel-head">
+              <h3>⭐ Yıldız Yakala</h3>
+              <span class="arcade-score" id="yildizStat">Skor: 0 · Can: ❤️❤️❤️</span>
+            </div>
+            <canvas class="yildiz-canvas" id="yildizCanvas" width="420" height="300"></canvas>
+            <p class="arcade-hint" id="yildizHint">Fareyle/parmakla ya da ok tuşlarıyla sepeti hareket ettir, düşen yıldızları yakala!</p>
+            <div class="memo-controls">
+              <button class="btn btn-dark" id="yildizReset">Yeniden Başla 🔄</button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -89,5 +127,8 @@
     import { initRitimGame } from './js/ritim.js';
     initRitimGame();
   </script>
+  <script src="js/xox.js"></script>
+  <script src="js/renkyakala.js"></script>
+  <script src="js/yildizyakala.js"></script>
 </body>
 </html>
