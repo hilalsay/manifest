@@ -625,28 +625,25 @@ footer p{color:var(--ink-soft); font-size:0.85rem; margin-top:10px;}
 }
 @media (max-width:640px){.flower-snow{display:none;}}
 
-/* ---------- ŞARKI MASKOTU: kenarlarda dolaşan, el sallayan, tıklayınca zıplayan karakter ---------- */
+/* ---------- ŞARKI MASKOTU: kenarlarda dolaşan, el sallayan, tıklayınca zıplayan karakter ----------
+   Konum + döniş js/mascot.js içinden her karede hesaplanır (js/mascot.js'e bakın):
+   üst/alt kenarda yatay yatarak kayar, sağ/sol kenarda dik (ayakları üzerinde) yürür —
+   böylece hiçbir kenarda "kafası üzerinde" durmaz. .mascot'un genişlik/yükseklik ve
+   .mascot-rotate'in dönüşü JS tarafından ayarlanır; .mascot-rotate her zaman kendi doğal
+   (dik) kutusunun ortasında kalır, bu yüzden döniş sırasında kayma olmaz. */
 .mascot-wrap{position:fixed; inset:0; z-index:6; pointer-events:none;}
-.mascot{
-  position:absolute; top:0; left:0; width:76px;
-  animation:mascotPatrol 26s linear infinite;
-  will-change:transform;
+.mascot{position:absolute; top:0; left:0; width:76px; height:140px;}
+.mascot-rotate{
+  position:absolute; top:50%; left:50%; width:76px; height:140px;
+  margin:-70px 0 0 -38px;
 }
-.mascot-wave{transform-origin:50% 100%; animation:mascotWave 4.5s ease-in-out infinite;}
+.mascot-wave{width:100%; height:100%; transform-origin:50% 100%; animation:mascotWave 4.5s ease-in-out infinite;}
 .mascot img{
-  display:block; width:100%; height:auto; cursor:pointer; pointer-events:auto;
+  display:block; width:100%; height:100%; object-fit:contain; cursor:pointer; pointer-events:auto;
   transform-origin:50% 100%;
   filter:drop-shadow(0 8px 10px rgba(27,18,51,0.28));
 }
 .mascot img.jumping{animation:mascotJump 0.6s ease-in-out;}
-
-@keyframes mascotPatrol{
-  0%   {transform:translate(0,0);}
-  25%  {transform:translate(calc(100vw - 76px), 0);}
-  50%  {transform:translate(calc(100vw - 76px), calc(100vh - 76px));}
-  75%  {transform:translate(0, calc(100vh - 76px));}
-  100% {transform:translate(0,0);}
-}
 @keyframes mascotWave{
   0%, 15%, 100%{transform:rotate(0deg);}
   4%{transform:rotate(-14deg);}
@@ -660,7 +657,6 @@ footer p{color:var(--ink-soft); font-size:0.85rem; margin-top:10px;}
   80%{transform:translateY(0) scale(0.94,1.06);}
   100%{transform:translateY(0) scale(1,1);}
 }
-@media (max-width:640px){.mascot{width:56px;}}
 
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
