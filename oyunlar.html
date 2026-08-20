@@ -83,9 +83,21 @@
               <h3>⭕ XOX</h3>
               <span class="stat" id="xoxStat">Sıra: X</span>
             </div>
+            <div class="xox-players">
+              <div class="xox-player">
+                <label for="xoxNameX">X oyuncusu</label>
+                <input type="text" id="xoxNameX" placeholder="İsmini yaz..." maxlength="14" />
+                <div class="xox-name-picker" id="xoxPickX" aria-label="Hazır isimler"></div>
+              </div>
+              <div class="xox-player">
+                <label for="xoxNameO">O oyuncusu</label>
+                <input type="text" id="xoxNameO" placeholder="İsmini yaz..." maxlength="14" />
+                <div class="xox-name-picker" id="xoxPickO" aria-label="Hazır isimler"></div>
+              </div>
+            </div>
             <div class="xox-grid" id="xoxGrid"></div>
             <p class="win-msg" id="xoxWin"></p>
-            <p class="arcade-hint">Aynı cihazdan sırayla oynayın — X: Sueda 🌿, O: Hilal 💜.</p>
+            <p class="arcade-hint">Aynı cihazdan sırayla oynayın — isminizi yazın ya da hazır isimlerden seçin.</p>
             <div class="memo-controls">
               <button class="btn btn-dark" id="xoxReset">Yeniden Başla 🔄</button>
             </div>
