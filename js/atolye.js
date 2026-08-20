@@ -88,17 +88,6 @@ const BACKGROUNDS = [
     },
   },
   {
-    key: "gokkusagi", label: "Gökkuşağı", preview: "linear-gradient(180deg,#FFD9D9,#FFF3C4,#D9FFE3,#D9ECFF,#E7D9FF)",
-    draw(ctx, w, h) {
-      const colors = ["#FFD9D9", "#FFF3C4", "#D9FFE3", "#D9ECFF", "#E7D9FF"];
-      const bandH = h / colors.length;
-      colors.forEach((c, i) => {
-        ctx.fillStyle = c;
-        ctx.fillRect(0, i * bandH, w, bandH + 1);
-      });
-    },
-  },
-  {
     key: "cizgili", label: "Çizgili", preview: "repeating-linear-gradient(45deg,#FFF3C4,#FFF3C4 14px,#FFE29A 14px,#FFE29A 28px)",
     draw(ctx, w, h) {
       ctx.fillStyle = "#FFF3C4";
@@ -342,7 +331,12 @@ function drawMountains(ctx, w, h) {
   ctx.restore();
 }
 
+function drawEmptyTemplate() {
+  /* şablonsuz, tamamen boş tuval — sadece boyama */
+}
+
 const TEMPLATES = [
+  { key: "bos", label: "Boş", emoji: "📄", draw: drawEmptyTemplate },
   { key: "kart", label: "Kart", emoji: "💌", draw: drawCardTemplate },
   { key: "kedi", label: "Kedi", emoji: "🐱", draw: drawCat },
   { key: "tavsan", label: "Tavşan", emoji: "🐰", draw: drawBunny },

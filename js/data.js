@@ -53,5 +53,5 @@ const NAV_ITEMS = [
   { href:"test.html",    label:"Test",            id:"test" },
   { href:"oyunlar.html", label:"Oyunlar",         id:"oyunlar" },
   { href:"atolye.html",  label:"Atölye",          id:"atolye" },
-  { href:"kanalim.html", label:"Şarkılar",        id:"kanalim" },
+  { href:"sarkilar.html", label:"Şarkılar",        id:"sarkilar" },
 ];

@@ -47,6 +47,10 @@
           const win = document.getElementById("memoWin");
           win.textContent = `Harika iş! ${moves} hamlede, ${formatTime(memoSeconds)} sürede bitirdin 🎉`;
           win.classList.add("show");
+          if(typeof launchSparkleBurst === "function"){
+            const rect = win.getBoundingClientRect();
+            launchSparkleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+          }
           if(typeof launchConfetti === "function") launchConfetti();
         }
       } else {

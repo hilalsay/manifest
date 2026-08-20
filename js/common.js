@@ -59,6 +59,31 @@ function initSongBanner(elId){
   el.innerHTML = `${daySong.emoji} Günün Şarkısı: <strong>${daySong.title}</strong> — bugün bunu dinle! 🎧`;
 }
 
+function launchSparkleBurst(originX, originY){
+  const emojis = ["✨","⭐","💫","🌟","💜","💖"];
+  const cx = typeof originX === "number" ? originX : window.innerWidth / 2;
+  const cy = typeof originY === "number" ? originY : window.innerHeight / 2;
+  for(let i = 0; i < 30; i++){
+    const s = document.createElement("div");
+    s.className = "sparkle-burst";
+    s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    s.style.left = cx + "px";
+    s.style.top = cy + "px";
+    s.style.fontSize = (Math.random() * 14 + 14) + "px";
+    document.body.appendChild(s);
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 220 + 80;
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance;
+    const duration = Math.random() * 500 + 700;
+    s.animate([
+      { transform: "translate(-50%,-50%) scale(0.3)", opacity: 0 },
+      { transform: "translate(-50%,-50%) scale(1.1)", opacity: 1, offset: 0.2 },
+      { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.7)`, opacity: 0 }
+    ], { duration, easing: "ease-out" }).onfinish = () => s.remove();
+  }
+}
+
 function launchConfetti(){
   const colors = ["#2FBF71","#9D5CFF","#FF5FA8","#3E8EFF","#FF4757","#FFC93C"];
   for(let i = 0; i < 40; i++){

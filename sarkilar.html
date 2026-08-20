@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Şarkılar | Manifest Dünyam</title>
+  <meta name="description" content="Manifest grubunun tüm şarkılarını buradan seçip dinleyebilirsin. İstediğin şarkıya tıkla, müziği başlat." />
+  <link rel="canonical" href="https://manifest.hilalsay.com.tr/sarkilar.html" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Manifest Dünyam" />
+  <meta property="og:locale" content="tr_TR" />
+  <meta property="og:title" content="Manifest Şarkıları" />
+  <meta property="og:description" content="Manifest grubunun tüm şarkılarını buradan seçip dinleyebilirsin." />
+  <meta property="og:url" content="https://manifest.hilalsay.com.tr/sarkilar.html" />
+  <meta property="og:image" content="https://manifest.hilalsay.com.tr/img/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Manifest Dünyam — fan sayfası" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://manifest.hilalsay.com.tr/img/og-image.png" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💫</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Mulish:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <span class="eyebrow" style="color:#F4C9E4;">🎵 Manifest Playlist</span>
+        <h1>Manifest Şarkıları</h1>
+        <p>Manifest grubunun tüm şarkılarını buradan seçip dinleyebilirsin. İstediğin şarkıya tıkla, müziği başlat.</p>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="wrap rhythm-page">
+        <div class="song-picker" id="manifestPlaylist" aria-label="Manifest şarkıları listesi"></div>
+
+        <div class="spotify-player" style="margin-top:18px;">
+          <div class="sp-head">
+            <span class="sp-eyebrow">ŞİMDİ ÇALIYOR</span>
+            <span class="sp-badge">Manifest</span>
+          </div>
+
+          <div class="sp-now">
+            <div class="sp-art" id="spArt">🎵</div>
+            <div class="sp-meta">
+              <h3 id="nowPlaying">Şarkı seç</h3>
+              <p id="songStatus">Bir şarkı seç, müziği başlat.</p>
+            </div>
+          </div>
+
+          <div class="sp-progress-row">
+            <span class="sp-time" id="songElapsed">0:00</span>
+            <input type="range" class="sp-progress" id="songSeek" min="0" max="0" value="0" step="1" disabled aria-label="Şarkı ilerlemesi" />
+            <span class="sp-time" id="songDuration">0:00</span>
+          </div>
+
+          <div class="sp-transport">
+            <button type="button" class="sp-side-btn" id="prevSong" aria-label="Önceki şarkı">⏮</button>
+            <button type="button" class="sp-play-btn" id="playPauseBtn" aria-label="Oynat">▶</button>
+            <button type="button" class="sp-side-btn" id="nextSong" aria-label="Sonraki şarkı">⏭</button>
+          </div>
+
+          <div class="sp-bottom-row">
+            <button type="button" class="sp-stop-link" id="stopSelectedSong" disabled>↺ Baştan başlat</button>
+            <div class="sp-volume">
+              <button type="button" class="sp-vol-icon" id="volumeIcon" aria-label="Sesi aç/kapat">🔊</button>
+              <input type="range" class="sp-vol-slider" id="songVolume" min="0" max="100" value="80" aria-label="Ses düzeyi" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    (function () {
+      const playlist = Array.isArray(TRACKS) ? TRACKS : [];
+      const root = document.getElementById('manifestPlaylist');
+      const nowPlaying = document.getElementById('nowPlaying');
+      const songStatus = document.getElementById('songStatus');
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const prevBtn = document.getElementById('prevSong');
+      const nextBtn = document.getElementById('nextSong');
+      const stopBtn = document.getElementById('stopSelectedSong');
+      const seekInput = document.getElementById('songSeek');
+      const elapsedLabel = document.getElementById('songElapsed');
+      const durationLabel = document.getElementById('songDuration');
+      const volumeInput = document.getElementById('songVolume');
+      const volumeIcon = document.getElementById('volumeIcon');
+      const spArt = document.getElementById('spArt');
+
+      if (!root || !playlist.length) return;
+
+      const audio = new Audio();
+      audio.preload = 'none';
+      audio.volume = Number(volumeInput.value) / 100;
+      let selectedTrack = null;
+      let isSeeking = false;
+      let volumeBeforeMute = Number(volumeInput.value);
+
+      function setSeekProgress() {
+        const max = Number(seekInput.max) || 0;
+        const pct = max ? (Number(seekInput.value) / max) * 100 : 0;
+        seekInput.style.setProperty('--progress', pct + '%');
+      }
+
+      function resetSeek() {
+        seekInput.value = 0;
+        seekInput.max = 0;
+        seekInput.disabled = true;
+        elapsedLabel.textContent = '0:00';
+        durationLabel.textContent = '0:00';
+        setSeekProgress();
+      }
+
+      function setVolumeProgress() {
+        volumeInput.style.setProperty('--progress', volumeInput.value + '%');
+      }
+
+      function updateVolumeIcon(val) {
+        volumeIcon.textContent = val === 0 ? '🔇' : val < 50 ? '🔉' : '🔊';
+      }
+
+      function setActiveButton(trackId) {
+        root.querySelectorAll('.song-pick').forEach((button) => {
+          const isActive = button.dataset.trackId === trackId;
+          button.classList.toggle('active', isActive);
+        });
+      }
+
+      function setTransportEnabled(enabled) {
+        stopBtn.disabled = !enabled;
+      }
+
+      function attemptPlay() {
+        audio.play().catch(() => {
+          songStatus.textContent = 'Tarayıcı otomatik oynatmayı engelledi. Tekrar oynat butonuna basabilirsin.';
+        });
+      }
+
+      function playTrack(track) {
+        selectedTrack = track;
+        setActiveButton(track.id);
+        nowPlaying.textContent = `${track.emoji} ${track.title}`;
+        spArt.textContent = track.emoji;
+
+        if (!track.mp3) {
+          songStatus.textContent = 'Bu şarkı için ses dosyası eklenmemiş. audio/ klasörüne MP3 ekleyince burada çalmaya başlar.';
+          audio.pause();
+          setTransportEnabled(false);
+          resetSeek();
+          return;
+        }
+
+        // Only reload the source if it's a different track — otherwise "Başlat"
+        // after "Durdur"/"Duraklat" would restart from the beginning even on resume.
+        if (!audio.src.endsWith(track.mp3)) {
+          audio.src = track.mp3;
+        }
+        attemptPlay();
+      }
+
+      playlist.forEach((track) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'song-pick';
+        button.dataset.trackId = track.id;
+        button.textContent = `${track.emoji} ${track.title}`;
+        button.addEventListener('click', () => playTrack(track));
+        root.appendChild(button);
+      });
+
+      function getCurrentIndex() {
+        if (!selectedTrack) return -1;
+        return playlist.findIndex((t) => t.id === selectedTrack.id);
+      }
+
+      function playAt(index) {
+        const wrapped = ((index % playlist.length) + playlist.length) % playlist.length;
+        playTrack(playlist[wrapped]);
+      }
+
+      // Tek buton: hiçbir şey seçilmemişse ilk şarkıyı başlatır, çalıyorsa
+      // duraklatır, duraklatılmışsa kaldığı yerden devam ettirir.
+      playPauseBtn.addEventListener('click', () => {
+        if (!selectedTrack) {
+          const first = playlist[0];
+          if (first) playTrack(first);
+          return;
+        }
+        const isCurrentTrackLoaded = selectedTrack.mp3 && audio.src.endsWith(selectedTrack.mp3);
+        if (isCurrentTrackLoaded && audio.paused) {
+          attemptPlay();
+          return;
+        }
+        if (isCurrentTrackLoaded && !audio.paused) {
+          audio.pause();
+          songStatus.textContent = 'Duraklatıldı.';
+          return;
+        }
+        playTrack(selectedTrack);
+      });
+
+      prevBtn.addEventListener('click', () => playAt(getCurrentIndex() - 1));
+      nextBtn.addEventListener('click', () => playAt(getCurrentIndex() + 1));
+
+      stopBtn.addEventListener('click', () => {
+        audio.pause();
+        audio.currentTime = 0;
+        setTransportEnabled(false);
+        seekInput.value = 0;
+        elapsedLabel.textContent = '0:00';
+        setSeekProgress();
+        songStatus.textContent = 'Durduruldu.';
+      });
+
+      // Tek doğruluk kaynağı: buton/ikon durumu audio elementinin gerçek
+      // play/pause/ended olaylarından belirlenir — hangi kod yolu çalmayı
+      // başlatmış/durdurmuş olursa olsun arayüz hep senkron kalır.
+      audio.addEventListener('play', () => {
+        setTransportEnabled(true);
+        playPauseBtn.textContent = '⏸';
+        playPauseBtn.setAttribute('aria-label', 'Duraklat');
+        songStatus.textContent = 'Çalıyor...';
+      });
+
+      audio.addEventListener('pause', () => {
+        playPauseBtn.textContent = '▶';
+        playPauseBtn.setAttribute('aria-label', 'Oynat');
+      });
+
+      audio.addEventListener('ended', () => {
+        setTransportEnabled(false);
+        songStatus.textContent = 'Bitti.';
+      });
+
+      // İlerleme çubuğu: süre bilgisi gelince aç, çalarken ilerlet,
+      // sürükleme sırasında timeupdate'in üzerine yazmasını engelle.
+      audio.addEventListener('loadedmetadata', () => {
+        const duration = Math.floor(audio.duration) || 0;
+        seekInput.max = duration;
+        seekInput.value = Math.floor(audio.currentTime);
+        seekInput.disabled = false;
+        durationLabel.textContent = formatTime(duration);
+        setSeekProgress();
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        if (isSeeking) return;
+        seekInput.value = Math.floor(audio.currentTime);
+        elapsedLabel.textContent = formatTime(Math.floor(audio.currentTime));
+        setSeekProgress();
+      });
+
+      seekInput.addEventListener('input', () => {
+        isSeeking = true;
+        elapsedLabel.textContent = formatTime(Number(seekInput.value));
+        setSeekProgress();
+      });
+
+      seekInput.addEventListener('change', () => {
+        audio.currentTime = Number(seekInput.value);
+        isSeeking = false;
+      });
+
+      // Ses düzeyi + tıkla-sustur ikonu
+      updateVolumeIcon(Number(volumeInput.value));
+      setVolumeProgress();
+
+      volumeInput.addEventListener('input', () => {
+        const val = Number(volumeInput.value);
+        audio.volume = val / 100;
+        audio.muted = false;
+        updateVolumeIcon(val);
+        setVolumeProgress();
+        if (val > 0) volumeBeforeMute = val;
+      });
+
+      volumeIcon.addEventListener('click', () => {
+        if (!audio.muted && Number(volumeInput.value) > 0) {
+          volumeBeforeMute = Number(volumeInput.value);
+          audio.muted = true;
+          volumeInput.value = 0;
+        } else {
+          audio.muted = false;
+          volumeInput.value = volumeBeforeMute || 80;
+          audio.volume = Number(volumeInput.value) / 100;
+        }
+        updateVolumeIcon(Number(volumeInput.value));
+        setVolumeProgress();
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        initSite('sarkilar');
+      });
+    })();
+  </script>
+</body>
+</html>
