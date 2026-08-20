@@ -7,6 +7,7 @@ export function initRitimGame() {
   const prevBtn = document.getElementById('ritim-prev');
   const nextBtn = document.getElementById('ritim-next');
   const loopBtn = document.getElementById('ritim-loop');
+  const muteBtn = document.getElementById('ritim-mute');
   const pickerRoot = document.getElementById('ritim-song-picker');
   const nowPlayingEl = document.getElementById('ritim-now-playing');
   const tapButtonsRoot = document.getElementById('ritim-tap-buttons');
@@ -332,6 +333,12 @@ export function initRitimGame() {
     setStatus(state.loop ? 'Loop açık.' : 'Loop kapalı.');
   }
 
+  function toggleMute() {
+    audio.muted = !audio.muted;
+    if (muteBtn) muteBtn.textContent = audio.muted ? '🔇 Sessiz' : '🔊 Ses';
+    setStatus(audio.muted ? 'Ses kısıldı.' : 'Ses açıldı.', '', 1000);
+  }
+
   function goToTrack(offset) {
     const nextIndex = state.trackIndex + offset;
     selectTrack(nextIndex);
@@ -363,6 +370,11 @@ export function initRitimGame() {
   if (loopBtn) {
     loopBtn.addEventListener('click', toggleLoop);
     loopBtn.textContent = 'Loop: Kapalı';
+  }
+
+  if (muteBtn) {
+    muteBtn.addEventListener('click', toggleMute);
+    muteBtn.textContent = audio.muted ? '🔇 Sessiz' : '🔊 Ses';
   }
 
   document.addEventListener('keydown', (event) => {
