@@ -3,7 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manifest Atölye</title>
+  <title>Sanat Atölyesi | Manifest Dünyam</title>
+  <meta name="description" content="Sevimli bir arka plan ve şablon (kedi, tavşan, kelebek, manzara...) seç, renk seç, fırça boyutunu ayarla ve kendi Manifest kartını boya. Boyanı indir, paylaş." />
+  <link rel="canonical" href="https://manifest.hilalsay.com.tr/atolye.html" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Manifest Dünyam" />
+  <meta property="og:locale" content="tr_TR" />
+  <meta property="og:title" content="Manifest Sanat Atölyesi" />
+  <meta property="og:description" content="Sevimli bir arka plan ve şablon seç, renk seç ve kendi Manifest kartını boya." />
+  <meta property="og:url" content="https://manifest.hilalsay.com.tr/atolye.html" />
+  <meta property="og:image" content="https://manifest.hilalsay.com.tr/img/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Manifest Dünyam — fan sayfası" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://manifest.hilalsay.com.tr/img/og-image.png" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💫</text></svg>" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,13 +31,23 @@
       <div class="wrap">
         <span class="eyebrow" style="color:#F4C9E4;">Sanat Atölyesi</span>
         <h1>Manifest kartını çiz</h1>
-        <p>Renk seç, fırça boyutunu ayarla ve küçük bir girişim çizimi yap.</p>
+        <p>Sevimli bir arka plan ve boyayacağın bir şablon seç, rengini seç, fırça boyutunu ayarla ve boyamaya başla.</p>
       </div>
     </section>
 
     <section class="block" style="background:var(--paper-alt);">
       <div class="wrap">
         <div class="game-panel">
+          <div class="paint-toolbar">
+            <span style="font-family:var(--mono); font-size:0.75rem; font-weight:700;">ARKA PLAN:</span>
+          </div>
+          <div class="paint-toolbar" id="bgToolbar"></div>
+
+          <div class="paint-toolbar">
+            <span style="font-family:var(--mono); font-size:0.75rem; font-weight:700;">ŞABLON:</span>
+          </div>
+          <div class="song-picker" id="tplToolbar" aria-label="Boyama şablonları"></div>
+
           <div class="paint-toolbar" id="paintToolbar">
             <span style="font-family:var(--mono); font-size:0.75rem; font-weight:700;">RENK:</span>
           </div>
@@ -29,7 +55,10 @@
             <span style="font-family:var(--mono); font-size:0.75rem; font-weight:700;">FIRÇA:</span>
             <input type="range" min="2" max="28" value="8" id="brushSize" />
           </div>
-          <canvas id="paintCanvas" width="640" height="380"></canvas>
+          <div class="paint-stage">
+            <canvas id="paintCanvas" width="640" height="380"></canvas>
+            <canvas id="lineArtCanvas" width="640" height="380"></canvas>
+          </div>
           <div class="paint-actions">
             <button class="btn btn-ghost" style="background:var(--paper); color:var(--ink); border:2px solid var(--card-line);" id="clearCanvas">Temizle 🧽</button>
             <button class="btn btn-primary" id="downloadCanvas">İndir 💾</button>

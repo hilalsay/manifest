@@ -5,9 +5,11 @@ function renderNav(activeId){
   document.body.insertAdjacentHTML("afterbegin", `
     <header class="nav">
       <div class="wrap">
-        <a class="logo" href="index.html"><span class="dot"></span> Manifest Dünyam</a>
+        <a class="logo" href="/"><span class="dot"></span> Manifest Dünyam</a>
         <button class="navtoggle" id="navToggle" aria-label="Menüyü aç">☰</button>
-        <ul class="navlinks" id="navLinks">${links}</ul>
+        <nav aria-label="Ana menü">
+          <ul class="navlinks" id="navLinks">${links}</ul>
+        </nav>
       </div>
     </header>`);
 }

@@ -48,7 +48,7 @@ const QUESTIONS = [
 ];
 
 const NAV_ITEMS = [
-  { href:"index.html",   label:"Ana Sayfa",       id:"home" },
+  { href:"/",            label:"Ana Sayfa",       id:"home" },
   { href:"kizlar.html",  label:"Manifest Kızları", id:"kizlar" },
   { href:"test.html",    label:"Test",            id:"test" },
   { href:"oyunlar.html", label:"Oyunlar",         id:"oyunlar" },

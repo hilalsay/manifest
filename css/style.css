@@ -366,10 +366,22 @@ section.block{padding:76px 0;}
 }
 .swatch.active{box-shadow:0 0 0 3px var(--ink);}
 .paint-toolbar input[type=range]{accent-color:var(--hilal);}
-#paintCanvas{
-  width:100%; max-width:640px; height:380px; display:block; margin:0 auto;
-  background:#fff; border-radius:16px; border:2px dashed var(--card-line); touch-action:none;
+
+/* background swatches */
+.bg-swatch{
+  width:46px; height:34px; border-radius:10px; border:2px solid #fff; box-shadow:0 0 0 2px var(--card-line);
+  cursor:pointer; padding:0; background-size:cover; background-position:center;
 }
+.bg-swatch.active{box-shadow:0 0 0 3px var(--ink);}
+
+/* two-layer paint stage: bottom canvas is paintable, top canvas holds the line-art template */
+.paint-stage{position:relative; max-width:640px; margin:0 auto;}
+.paint-stage canvas{
+  width:100%; height:380px; display:block; border-radius:16px; touch-action:none;
+}
+#paintCanvas{background:#fff; border:2px dashed var(--card-line);}
+#lineArtCanvas{position:absolute; inset:0; border:2px dashed transparent; pointer-events:none;}
+
 .paint-actions{display:flex; justify-content:center; gap:10px; margin-top:14px;}
 
 /* ---------- CHANNEL ---------- */

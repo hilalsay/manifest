@@ -225,7 +225,6 @@ export function initRitimGame() {
     if (!closest || closestDistance > HIT_TOLERANCE) {
       state.combo = 0;
       updateScore();
-      setStatus('Kaçırdın!', 'miss', 1000);
       return;
     }
 
@@ -253,7 +252,6 @@ export function initRitimGame() {
           clearNote(note);
           state.combo = 0;
           updateScore();
-          setStatus('Kaçırdın!', 'miss', 1000);
         }
       }
     }
@@ -382,11 +380,5 @@ export function initRitimGame() {
   updateScore();
   clearStatus();
   if (loopBtn) loopBtn.textContent = 'Loop: Kapalı';
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initRitimGame);
-} else {
-  initRitimGame();
 }
 
