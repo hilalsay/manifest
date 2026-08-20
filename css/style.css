@@ -767,6 +767,15 @@ footer p{color:var(--ink-soft); font-size:0.85rem; margin-top:10px;}
 .rhythm-lane.perfect .rhythm-target{background:var(--sueda); box-shadow:0 0 16px var(--sueda);}
 .rhythm-lane.miss .rhythm-target{background:var(--mina);}
 
+/* ritim oyunu ses düzeyi */
+.ritim-volume{
+  display:flex; align-items:center; gap:8px; background:var(--paper);
+  border:2px solid var(--card-line); border-radius:999px; padding:0 14px; height:38px;
+}
+.ritim-vol-icon{border:none; background:none; color:var(--ink-soft); font-size:1.1rem; cursor:pointer; padding:2px;}
+.ritim-vol-icon:hover{color:var(--ink);}
+.ritim-volume input[type=range]{width:90px; accent-color:var(--hilal);}
+
 /* ---------- VOLLEYBALL ---------- */
 .vball-wrap{max-width:480px; margin:0 auto;}
 .vball-canvas{

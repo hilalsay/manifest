@@ -8,6 +8,7 @@ export function initRitimGame() {
   const nextBtn = document.getElementById('ritim-next');
   const loopBtn = document.getElementById('ritim-loop');
   const muteBtn = document.getElementById('ritim-mute');
+  const volumeInput = document.getElementById('ritim-volume');
   const pickerRoot = document.getElementById('ritim-song-picker');
   const nowPlayingEl = document.getElementById('ritim-now-playing');
   const tapButtonsRoot = document.getElementById('ritim-tap-buttons');
@@ -22,6 +23,8 @@ export function initRitimGame() {
   const tracks = Array.isArray(TRACKS) ? TRACKS : [];
   const audio = new Audio();
   audio.preload = 'none';
+  audio.volume = volumeInput ? Number(volumeInput.value) / 100 : 0.8;
+  let volumeBeforeMute = volumeInput ? Number(volumeInput.value) : 80;
 
   const lanes = laneColors.map((color, index) => ({
     index,
@@ -333,9 +336,28 @@ export function initRitimGame() {
     setStatus(state.loop ? 'Loop açık.' : 'Loop kapalı.');
   }
 
+  function updateVolumeIcon() {
+    if (!muteBtn) return;
+    const level = audio.muted ? 0 : Math.round(audio.volume * 100);
+    muteBtn.textContent = level === 0 ? '🔇' : level < 50 ? '🔉' : '🔊';
+  }
+
+  function setVolume(level) {
+    audio.volume = level / 100;
+    audio.muted = false;
+    if (volumeInput) volumeInput.value = level;
+    if (level > 0) volumeBeforeMute = level;
+    updateVolumeIcon();
+  }
+
   function toggleMute() {
-    audio.muted = !audio.muted;
-    if (muteBtn) muteBtn.textContent = audio.muted ? '🔇 Sessiz' : '🔊 Ses';
+    if (!audio.muted && audio.volume > 0) {
+      volumeBeforeMute = Math.round(audio.volume * 100);
+      audio.muted = true;
+    } else {
+      setVolume(volumeBeforeMute || 80);
+    }
+    updateVolumeIcon();
     setStatus(audio.muted ? 'Ses kısıldı.' : 'Ses açıldı.', '', 1000);
   }
 
@@ -374,8 +396,12 @@ export function initRitimGame() {
 
   if (muteBtn) {
     muteBtn.addEventListener('click', toggleMute);
-    muteBtn.textContent = audio.muted ? '🔇 Sessiz' : '🔊 Ses';
   }
+
+  if (volumeInput) {
+    volumeInput.addEventListener('input', () => setVolume(Number(volumeInput.value)));
+  }
+  updateVolumeIcon();
 
   document.addEventListener('keydown', (event) => {
     const laneIndex = laneKeys.indexOf(event.code);

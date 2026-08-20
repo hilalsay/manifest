@@ -75,7 +75,10 @@
               <button class="btn btn-dark" id="ritim-pause" type="button">Durdur ||</button>
               <button class="btn btn-dark" id="ritim-next" type="button">Sonraki ⏭</button>
               <button class="btn btn-dark" id="ritim-loop" type="button">Loop: Kapalı</button>
-              <button class="btn btn-dark" id="ritim-mute" type="button" aria-label="Sesi kıs/aç">🔊 Ses</button>
+              <div class="ritim-volume">
+                <button type="button" class="ritim-vol-icon" id="ritim-mute" aria-label="Sesi kıs/aç">🔊</button>
+                <input type="range" id="ritim-volume" min="0" max="100" value="80" aria-label="Ses düzeyi" />
+              </div>
             </div>
           </div>
 
