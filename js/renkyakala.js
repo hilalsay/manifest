@@ -1,9 +1,26 @@
 (function(){
   const HOLE_COUNT = 12;
-  const ROUND_SECONDS = 30;
+  const DEFAULT_SECONDS = 30;
   const SPAWN_MS = 700;
   const LIFETIME_MS = 850;
   const TARGET_SWITCH_MS = 10000;
+
+  // "Torba" (bag) rastgeleliği: her öğeyi tekrar çekmeden önce tüm seti bir kez
+  // dağıtır — Math.random()'ın art arda aynı sonucu (aynı renk/aynı delik)
+  // vermesine göre çok daha dengeli ve gerçekten "rastgele" hissettirir.
+  function makeBag(items){
+    let bag = [];
+    return function next(){
+      if(bag.length === 0){
+        bag = items.slice();
+        for(let i = bag.length - 1; i > 0; i--){
+          const j = Math.floor(Math.random() * (i + 1));
+          [bag[i], bag[j]] = [bag[j], bag[i]];
+        }
+      }
+      return bag.pop();
+    };
+  }
 
   function initRenkYakala(){
     const grid = document.getElementById("renkGrid");
@@ -11,13 +28,18 @@
     const targetEl = document.getElementById("renkTarget");
     const winMsg = document.getElementById("renkWin");
     const startBtn = document.getElementById("renkStart");
+    const durationPicker = document.getElementById("renkDurationPicker");
     if(!grid || !statEl || !targetEl || !winMsg || !startBtn) return;
 
-    let score = 0, timeLeft = ROUND_SECONDS, target = null, running = false;
+    let roundSeconds = DEFAULT_SECONDS;
+    let score = 0, timeLeft = roundSeconds, target = null, running = false;
     let spawnTimer = null, countdownTimer = null, targetTimer = null;
     let activeHole = null, hideTimer = null;
+    let nextColor = makeBag(MEMBERS);
+    let nextHoleIndex = makeBag(Array.from({ length: HOLE_COUNT }, (_, i) => i));
 
     /* delikleri bir kez oluştur */
+    const holes = [];
     for(let i = 0; i < HOLE_COUNT; i++){
       const hole = document.createElement("button");
       hole.type = "button";
@@ -25,16 +47,36 @@
       hole.setAttribute("aria-label", `Delik ${i + 1}`);
       hole.addEventListener("click", () => handleHoleClick(hole));
       grid.appendChild(hole);
+      holes.push(hole);
+    }
+
+    /* süre seçimi — oyun başlamadan önce seçilir, çalışırken de değiştirilebilir,
+       bir sonraki "Başlat"ta devreye girer */
+    if(durationPicker){
+      durationPicker.querySelectorAll(".song-pick").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          roundSeconds = Number(btn.dataset.seconds) || DEFAULT_SECONDS;
+          durationPicker.querySelectorAll(".song-pick").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          if(!running){
+            timeLeft = roundSeconds;
+            updateStat();
+          }
+        });
+      });
     }
 
     function pickTarget(){
-      target = MEMBERS[Math.floor(Math.random() * MEMBERS.length)];
+      let next = nextColor();
+      if(target && next.key === target.key) next = nextColor(); // aynı hedefin art arda gelmesini engelle
+      target = next;
       targetEl.textContent = `${target.colorTr} ${target.emoji}`;
       targetEl.style.color = target.hex;
     }
 
     function updateStat(){
-      statEl.textContent = `Skor: ${score} · Süre: 0:${String(timeLeft).padStart(2, "0")}`;
+      const time = typeof formatTime === "function" ? formatTime(timeLeft) : `0:${String(timeLeft).padStart(2, "0")}`;
+      statEl.textContent = `Skor: ${score} · Süre: ${time}`;
     }
 
     function clearHole(){
@@ -49,9 +91,8 @@
 
     function spawnDot(){
       clearHole();
-      const holes = grid.querySelectorAll(".renk-hole");
-      const hole = holes[Math.floor(Math.random() * holes.length)];
-      const member = MEMBERS[Math.floor(Math.random() * MEMBERS.length)];
+      const hole = holes[nextHoleIndex()];
+      const member = nextColor();
       hole.classList.add("active");
       hole.style.background = member.hex;
       hole.dataset.key = member.key;
@@ -78,10 +119,13 @@
 
     function startGame(){
       score = 0;
-      timeLeft = ROUND_SECONDS;
+      timeLeft = roundSeconds;
       running = true;
       winMsg.classList.remove("show");
       clearHole();
+      nextColor = makeBag(MEMBERS);
+      nextHoleIndex = makeBag(Array.from({ length: HOLE_COUNT }, (_, i) => i));
+      target = null;
       pickTarget();
       updateStat();
       startBtn.textContent = "Yeniden Başlat 🔄";
