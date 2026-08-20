@@ -7,6 +7,7 @@ MP3 dosyalarını buraya koyabilirsin (isteğe bağlı):
   amator.mp3
   toz-pembe.mp3
   basrol-sensin.mp3
+  hileli.mp3
 
 Sonra js/data.js içinde ilgili şarkının mp3 alanını güncelle:
   mp3: "audio/zamansizdik.mp3"
