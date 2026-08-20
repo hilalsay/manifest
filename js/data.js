@@ -21,17 +21,20 @@ const SONGS = [
   { title:"Amatör", emoji:"🎤" },
   { title:"Toz Pembe", emoji:"🌷" },
   { title:"Başrol Sensin", emoji:"🎬" },
+  { title:"Hileli", emoji:"🎲" },
 ];
 
 /** Ritim oyunu şarkıları — MP3 varsa audio/ klasöründen çalar. */
 const TRACKS = [
-  { id:"zamansizdik", title:"Zamansızdık", emoji:"⏳", mp3:"audio/zamansizdik.mp3", bpm:122, startAt:0 },
-  { id:"ariyo",       title:"Arıyo",      emoji:"📞", mp3:"audio/ariyo.mp3", bpm:128, startAt:0 },
-  { id:"snap",        title:"Snap",       emoji:"📸", mp3:"audio/snap.mp3", bpm:130, startAt:0 },
-  { id:"kts",         title:"KTS",        emoji:"🔥", mp3:"audio/kts.mp3", bpm:126, startAt:0 },
-  { id:"amator",      title:"Amatör",     emoji:"🎤", mp3:"audio/amator.mp3", bpm:124, startAt:0 },
-  { id:"toz-pembe",   title:"Toz Pembe",  emoji:"🌷", mp3:"audio/toz-pembe.mp3", bpm:120, startAt:0 },
-  { id:"basrol-sensin",title:"Başrol Sensin", emoji:"🎬", mp3:"audio/basrol-sensin.mp3", bpm:127, startAt:0 },
+  { id:"zamansizdik", title:"Zamansızdık", emoji:"⏳", mp3:"audio/zamansizdik.mp3", bpm:122, startAt:10 },
+  { id:"ariyo",       title:"Arıyo",      emoji:"📞", mp3:"audio/ariyo.mp3", bpm:128, startAt:10 },
+  { id:"snap",        title:"Snap",       emoji:"📸", mp3:"audio/snap.mp3", bpm:130, startAt:10 },
+  { id:"kts",         title:"KTS",        emoji:"🔥", mp3:"audio/kts.mp3", bpm:126, startAt:10 },
+  { id:"amator",      title:"Amatör",     emoji:"🎤", mp3:"audio/amator.mp3", bpm:124, startAt:10 },
+  { id:"toz-pembe",   title:"Toz Pembe",  emoji:"🌷", mp3:"audio/toz-pembe.mp3", bpm:120, startAt:10 },
+  { id:"basrol-sensin",title:"Başrol Sensin", emoji:"🎬", mp3:"audio/basrol-sensin.mp3", bpm:127, startAt:10 },
+  { id:"hileli",       title:"hileli", emoji:"🎲", mp3:"audio/hileli.mp3", bpm:129, startAt:10 },
+
 ];
 
 const QUESTIONS = [
@@ -45,6 +48,16 @@ const QUESTIONS = [
     opts:["Yeşil","Mor","Pembe","Mavi","Kırmızı","Sarı"]},
   { q:"Bir Manifest konserinde olsan en çok ne yapardın?",
     opts:["Şarkı sözlerini tek kelime kaçırmadan söylerdim","Ön sırada dans ederdim","En güzel kombini giyip fotoğraf çektirirdim","Arkadaşlarımı organize ederdim","Koreografiyi ezbere bilirdim","Konser bitene kadar zıplardım"]},
+  { q:"Bir dans videosu çekeceğin zaman en çok neye dikkat edersin?",
+    opts:["Şarkı sözlerine duygu katmaya","Hareketlerin senkron olmasına","Kıyafetimin uyumuna","Kendi yorumumu katmaya","Koreografiyi kusursuz yapmaya","Enerjimi en üst seviyede tutmaya"]},
+  { q:"Yeni bir hobiye başlasan hangisini seçerdin?",
+    opts:["Şarkı yazarlığı","Hip-hop dans kursu","Moda tasarımı","Fotoğrafçılık","Bale ya da modern dans","Zumba / aerobik"]},
+  { q:"Bir yarışmada seni en çok ne heyecanlandırır?",
+    opts:["Solo şarkı söylemek","Dans düellosu","En iyi giyinen olmak","Kendi ekibimi kurmak","Koreografiyi öğretmek","Sahnede zıplayıp enerji vermek"]},
+  { q:"Manifest'in hangi tarzı sana daha yakın?",
+    opts:["Duygusal balad","Enerjik pop-dans","Şık ve zarif sahne","Kendine özgü / alternatif","Kompleks koreografili","Enerjik ve eğlenceli"]},
+  { q:"Bir gün Manifest ile tanışsan ilk ne sorardın?",
+    opts:["En sevdiğin şarkı sözü hangisi?","En sevdiğin dans hareketi ne?","En sevdiğin sahne kostümün ne?","Kendi tarzını nasıl buldun?","Koreografi yaparken nereden ilham alıyorsun?","Sahnede enerjini nasıl koruyorsun?"]},
 ];
 
 const NAV_ITEMS = [
