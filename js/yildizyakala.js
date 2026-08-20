@@ -101,6 +101,7 @@
         if(s.y >= catchTop - s.r && s.y <= H - 12 && Math.abs(s.x - basketX) <= BASKET_W / 2 + s.r * 0.4){
           score++;
           updateStat();
+          if(typeof playDing === "function") playDing();
           return false;
         }
         if(s.y - s.r > H){

@@ -64,6 +64,7 @@
       if(hole.dataset.key === target.key){
         score++;
         updateStat();
+        if(typeof playDing === "function") playDing();
         if(typeof launchSparkleBurst === "function"){
           const rect = hole.getBoundingClientRect();
           launchSparkleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);

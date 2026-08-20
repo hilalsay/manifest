@@ -84,6 +84,31 @@ function launchSparkleBurst(originX, originY){
   }
 }
 
+/* Web Audio API ile küçük bir "ding" sesi — dosya gerektirmez, oyunlarda
+   doğru vuruş/yakalama anında geri bildirim için kullanılır. */
+let _dingCtx = null;
+function playDing(){
+  try{
+    _dingCtx = _dingCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if(_dingCtx.state === "suspended") _dingCtx.resume();
+    const now = _dingCtx.currentTime;
+    const osc = _dingCtx.createOscillator();
+    const gain = _dingCtx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(880, now);
+    osc.frequency.exponentialRampToValueAtTime(1320, now + 0.08);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.25, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+    osc.connect(gain);
+    gain.connect(_dingCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.4);
+  } catch(err){
+    /* Web Audio desteklenmiyorsa sessizce geç */
+  }
+}
+
 function launchConfetti(){
   const colors = ["#2FBF71","#9D5CFF","#FF5FA8","#3E8EFF","#FF4757","#FFC93C"];
   for(let i = 0; i < 40; i++){
