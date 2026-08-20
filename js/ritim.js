@@ -9,6 +9,7 @@ export function initRitimGame() {
   const loopBtn = document.getElementById('ritim-loop');
   const pickerRoot = document.getElementById('ritim-song-picker');
   const nowPlayingEl = document.getElementById('ritim-now-playing');
+  const tapButtonsRoot = document.getElementById('ritim-tap-buttons');
 
   if (!lanesRoot || !scoreEl || !statusEl || !startBtn) return;
 
@@ -144,6 +145,26 @@ export function initRitimGame() {
     });
   }
 
+  function buildTapButtons() {
+    if (!tapButtonsRoot) return;
+    tapButtonsRoot.innerHTML = '';
+
+    lanes.forEach((lane) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'rhythm-key-btn';
+      btn.style.setProperty('--lane-color', lane.color);
+      btn.textContent = lane.name;
+      btn.setAttribute('aria-label', `${lane.name} şeridine vur`);
+      // pointerdown gives instant feedback (no 300ms tap delay) and works for touch, mouse and pen.
+      btn.addEventListener('pointerdown', (event) => {
+        event.preventDefault();
+        registerHit(lane.index);
+      });
+      tapButtonsRoot.appendChild(btn);
+    });
+  }
+
   function clearNote(noteMeta) {
     if (!noteMeta || !noteMeta.element) return;
     noteMeta.element.remove();
@@ -204,7 +225,6 @@ export function initRitimGame() {
     if (!closest || closestDistance > HIT_TOLERANCE) {
       state.combo = 0;
       updateScore();
-      setStatus('Kaçırdın!', 'miss', 1000);
       return;
     }
 
@@ -232,7 +252,6 @@ export function initRitimGame() {
           clearNote(note);
           state.combo = 0;
           updateScore();
-          setStatus('Kaçırdın!', 'miss', 1000);
         }
       }
     }
@@ -355,16 +374,11 @@ export function initRitimGame() {
   });
 
   buildLanes();
+  buildTapButtons();
   renderTrackPicker();
   updateNowPlaying();
   updateScore();
   clearStatus();
   if (loopBtn) loopBtn.textContent = 'Loop: Kapalı';
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initRitimGame);
-} else {
-  initRitimGame();
 }
 

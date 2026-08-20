@@ -2,118 +2,13 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manifest Kanalım</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Mulish:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <meta http-equiv="refresh" content="0; url=sarkilar.html" />
+  <link rel="canonical" href="https://manifest.hilalsay.com.tr/sarkilar.html" />
+  <meta name="robots" content="noindex, follow" />
+  <title>Şarkılar | Manifest Dünyam</title>
+  <script>location.replace('sarkilar.html');</script>
 </head>
 <body>
-  <main>
-    <section class="page-hero">
-      <div class="wrap">
-        <span class="eyebrow" style="color:#F4C9E4;">🎵 Manifest Playlist</span>
-        <h1>Manifest Şarkıları</h1>
-        <p>Manifest grubunun tüm şarkılarını buradan seçip dinleyebilirsin. İstediğin şarkıya tıkla, müziği başlat.</p>
-      </div>
-    </section>
-
-    <section class="block">
-      <div class="wrap rhythm-page">
-        <div class="song-picker" id="manifestPlaylist" aria-label="Manifest şarkıları listesi"></div>
-
-        <div class="game-panel" style="margin-top:18px;">
-          <div class="game-panel-head">
-            <h3>🎧 Şimdi Çalıyor</h3>
-            <span class="arcade-score">Manifest</span>
-          </div>
-
-          <div style="padding:18px 16px 8px; text-align:center;">
-            <h3 id="nowPlaying" style="margin:0 0 8px;">Şarkı seç</h3>
-            <p id="songStatus" class="rhythm-status" style="margin:0; min-height:1.6em;">Bir şarkı seç, müziği başlat.</p>
-          </div>
-
-          <div class="memo-controls" style="margin-top:12px;">
-            <button class="btn btn-primary" id="playSelectedSong" type="button">Çal ▶</button>
-            <button class="btn btn-ghost" id="pauseSelectedSong" type="button">Dur ||</button>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script src="js/data.js"></script>
-  <script src="js/common.js"></script>
-  <script>
-    (function () {
-      const playlist = Array.isArray(TRACKS) ? TRACKS : [];
-      const root = document.getElementById('manifestPlaylist');
-      const nowPlaying = document.getElementById('nowPlaying');
-      const songStatus = document.getElementById('songStatus');
-      const playBtn = document.getElementById('playSelectedSong');
-      const pauseBtn = document.getElementById('pauseSelectedSong');
-
-      if (!root || !playlist.length) return;
-
-      const audio = new Audio();
-      audio.preload = 'none';
-      let selectedTrack = null;
-
-      function setActiveButton(trackId) {
-        root.querySelectorAll('.song-pick').forEach((button) => {
-          const isActive = button.dataset.trackId === trackId;
-          button.classList.toggle('active', isActive);
-        });
-      }
-
-      function playTrack(track) {
-        selectedTrack = track;
-        setActiveButton(track.id);
-        nowPlaying.textContent = `${track.emoji} ${track.title}`;
-
-        if (!track.mp3) {
-          songStatus.textContent = 'Bu şarkı için ses dosyası eklenmemiş. audio/ klasörüne MP3 ekleyince burada çalmaya başlar.';
-          audio.pause();
-          return;
-        }
-
-        audio.src = track.mp3;
-        audio.play().then(() => {
-          songStatus.textContent = 'Çalıyor...';
-        }).catch(() => {
-          songStatus.textContent = 'Tarayıcı otomatik oynatmayı engelledi. Tekrar Çal butonuna basabilirsin.';
-        });
-      }
-
-      playlist.forEach((track) => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'song-pick';
-        button.dataset.trackId = track.id;
-        button.textContent = `${track.emoji} ${track.title}`;
-        button.addEventListener('click', () => playTrack(track));
-        root.appendChild(button);
-      });
-
-      playBtn.addEventListener('click', () => {
-        if (!selectedTrack) {
-          const first = playlist[0];
-          if (first) playTrack(first);
-          return;
-        }
-        playTrack(selectedTrack);
-      });
-
-      pauseBtn.addEventListener('click', () => {
-        audio.pause();
-        songStatus.textContent = 'Duraklatıldı.';
-      });
-
-      document.addEventListener('DOMContentLoaded', () => {
-        initSite('kanalim');
-      });
-    })();
-  </script>
+  <p>Bu sayfa taşındı: <a href="sarkilar.html">Şarkılar sayfasına git</a>.</p>
 </body>
 </html>
