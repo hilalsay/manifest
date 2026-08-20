@@ -33,7 +33,7 @@ const TRACKS = [
   { id:"amator",      title:"Amatör",     emoji:"🎤", mp3:"audio/amator.mp3", bpm:124, startAt:10 },
   { id:"toz-pembe",   title:"Toz Pembe",  emoji:"🌷", mp3:"audio/toz-pembe.mp3", bpm:120, startAt:10 },
   { id:"basrol-sensin",title:"Başrol Sensin", emoji:"🎬", mp3:"audio/basrol-sensin.mp3", bpm:127, startAt:10 },
-  { id:"hileli",       title:"hileli", emoji:"🎲", mp3:"audio/hileli.mp3", bpm:129, startAt:10 },
+  { id:"hileli",       title:"Hileli", emoji:"🎲", mp3:"audio/hileli.mp3", bpm:129, startAt:10 },
 
 ];
 
