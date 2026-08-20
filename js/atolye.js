@@ -345,6 +345,70 @@ const TEMPLATES = [
   { key: "daglar", label: "Dağ Manzarası", emoji: "⛰️", draw: drawMountains },
 ];
 
+/* ---------- boyama resimleri (gerçek görsel, çizgileri koyulaştırılıp fon şeffaflaştırılır) ---------- */
+
+const PHOTO_TEMPLATES = [
+  { key: "stitch-scrump", label: "Stitch", image: "img/coloring/stitch-scrump.jpg" },
+  { key: "stitch-uyku", label: "Uyku Vakti", image: "img/coloring/stitch-uyku.webp" },
+  { key: "fil-kelebek", label: "Yavru Fil", image: "img/coloring/fil-kelebek.jpg" },
+  { key: "kedi-yavrusu", label: "Kedi Yavrusu", image: "img/coloring/kedi-yavrusu.jpg" },
+  { key: "anime-kiz", label: "Anime Kız", image: "img/coloring/anime-kiz.jpg" },
+];
+
+const ALL_TEMPLATES = TEMPLATES.concat(PHOTO_TEMPLATES);
+
+/**
+ * Bir boyama görselini yükler ve açık (beyaza yakın) pikselleri şeffaflaştırıp
+ * koyu pikselleri mürekkep rengine boyayarak sadece siyah çizgiler kalan bir
+ * <canvas> üretir. Böylece görsel, çizim katmanının üstünde şablon gibi durur
+ * ve altındaki boyama hiçbir zaman çizgileri kapatmaz. Sonuç, tekrar işlemeden
+ * kullanılabilmesi için kaynak adresine göre önbelleğe alınır.
+ */
+const lineArtImageCache = new Map();
+function loadProcessedLineArt(src) {
+  if (lineArtImageCache.has(src)) return lineArtImageCache.get(src);
+  const promise = new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const off = document.createElement("canvas");
+      off.width = img.naturalWidth;
+      off.height = img.naturalHeight;
+      const octx = off.getContext("2d");
+      octx.drawImage(img, 0, 0);
+      try {
+        const frame = octx.getImageData(0, 0, off.width, off.height);
+        const d = frame.data;
+        const WHITE_CUTOFF = 222; // bundan açık pikseller tamamen şeffaf olur
+        const BLACK_CUTOFF = 60; // bundan koyu pikseller tam opak çizgi olur
+        const INK = [27, 18, 51]; // --ink
+        for (let i = 0; i < d.length; i += 4) {
+          const lum = (d[i] + d[i + 1] + d[i + 2]) / 3;
+          let alpha;
+          if (lum >= WHITE_CUTOFF) alpha = 0;
+          else if (lum <= BLACK_CUTOFF) alpha = 255;
+          else alpha = Math.round((255 * (WHITE_CUTOFF - lum)) / (WHITE_CUTOFF - BLACK_CUTOFF));
+          d[i] = INK[0]; d[i + 1] = INK[1]; d[i + 2] = INK[2]; d[i + 3] = alpha;
+        }
+        octx.putImageData(frame, 0, 0);
+      } catch (err) {
+        /* piksel okunamazsa (ör. tarayıcı kısıtı) orijinal görseli olduğu gibi kullan */
+      }
+      resolve(off);
+    };
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+  lineArtImageCache.set(src, promise);
+  return promise;
+}
+
+function drawContain(ctx, srcCanvas, w, h) {
+  const scale = Math.min(w / srcCanvas.width, h / srcCanvas.height) * 0.94;
+  const dw = srcCanvas.width * scale;
+  const dh = srcCanvas.height * scale;
+  ctx.drawImage(srcCanvas, (w - dw) / 2, (h - dh) / 2, dw, dh);
+}
+
 /* ---------- boyama uygulaması ---------- */
 
 function initPaint() {
@@ -369,10 +433,21 @@ function initPaint() {
     bg.draw(pctx, paintCanvas.width, paintCanvas.height);
   }
 
+  let tplRequestToken = 0;
   function paintTemplate(key) {
     lctx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
-    const tpl = TEMPLATES.find((t) => t.key === key) || TEMPLATES[0];
-    tpl.draw(lctx, lineCanvas.width, lineCanvas.height);
+    const tpl = ALL_TEMPLATES.find((t) => t.key === key) || ALL_TEMPLATES[0];
+    if (tpl.image) {
+      const token = ++tplRequestToken;
+      loadProcessedLineArt(tpl.image).then((canvas) => {
+        if (token !== tplRequestToken || !canvas) return; // kullanıcı bu arada başka bir şablon seçmiş
+        lctx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
+        drawContain(lctx, canvas, lineCanvas.width, lineCanvas.height);
+      });
+    } else {
+      tplRequestToken++;
+      tpl.draw(lctx, lineCanvas.width, lineCanvas.height);
+    }
   }
 
   paintBackground(currentBg);
@@ -412,20 +487,38 @@ function initPaint() {
     });
   }
 
+  /* araç çubuğundaki (çizgi film şablonları) ve galerideki (boyama resimleri) seçim,
+     tek bir fonksiyonda buluşur ki ikisi de birbirinin aktif durumunu güncelleyebilsin */
+  const coloringGrid = document.getElementById("coloringGrid");
+  function selectTemplate(key, { scroll = false } = {}) {
+    currentTpl = key;
+    if (tplToolbar) {
+      tplToolbar.querySelectorAll(".song-pick").forEach((el) => el.classList.toggle("active", el.dataset.tplKey === key));
+    }
+    if (coloringGrid) {
+      coloringGrid.querySelectorAll(".coloring-card").forEach((el) => el.classList.toggle("active", el.dataset.tplKey === key));
+    }
+    paintTemplate(key);
+    if (scroll) document.querySelector(".paint-stage")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
   /* şablon seçimi */
   if (tplToolbar) {
     TEMPLATES.forEach((tpl, i) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "song-pick" + (i === 0 ? " active" : "");
+      btn.dataset.tplKey = tpl.key;
       btn.textContent = `${tpl.emoji} ${tpl.label}`;
-      btn.addEventListener("click", () => {
-        currentTpl = tpl.key;
-        tplToolbar.querySelectorAll(".song-pick").forEach((el) => el.classList.remove("active"));
-        btn.classList.add("active");
-        paintTemplate(currentTpl);
-      });
+      btn.addEventListener("click", () => selectTemplate(tpl.key));
       tplToolbar.appendChild(btn);
+    });
+  }
+
+  /* boyama resimleri galerisi */
+  if (coloringGrid) {
+    coloringGrid.querySelectorAll(".coloring-card").forEach((card) => {
+      card.addEventListener("click", () => selectTemplate(card.dataset.tplKey, { scroll: true }));
     });
   }
 
@@ -468,24 +561,184 @@ function initPaint() {
   ["mousemove", "touchmove"].forEach((ev) => paintCanvas.addEventListener(ev, moveDraw, { passive: false }));
   ["mouseup", "mouseleave", "touchend"].forEach((ev) => paintCanvas.addEventListener(ev, endDraw));
 
-  document.getElementById("clearCanvas").addEventListener("click", () => paintBackground(currentBg));
-  document.getElementById("downloadCanvas").addEventListener("click", () => {
-    // Çizgi film katmanını ve boyanan katmanı tek bir görsele birleştir.
+  // Çizgi film katmanını ve boyanan katmanı tek bir görsele birleştirir.
+  function mergedDataUrl() {
     const merged = document.createElement("canvas");
     merged.width = paintCanvas.width;
     merged.height = paintCanvas.height;
     const mctx = merged.getContext("2d");
     mctx.drawImage(paintCanvas, 0, 0);
     mctx.drawImage(lineCanvas, 0, 0);
+    return merged.toDataURL("image/png");
+  }
 
+  document.getElementById("clearCanvas").addEventListener("click", () => paintBackground(currentBg));
+  document.getElementById("downloadCanvas").addEventListener("click", () => {
     const link = document.createElement("a");
     link.download = "manifest-kartim.png";
-    link.href = merged.toDataURL("image/png");
+    link.href = mergedDataUrl();
     link.click();
   });
+
+  const saveBtn = document.getElementById("saveToGallery");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", () => {
+      const ok = addToGallery(mergedDataUrl());
+      if (ok) {
+        saveBtn.textContent = "Kaydedildi! ✅";
+        if (typeof launchSparkleBurst === "function") {
+          const rect = saveBtn.getBoundingClientRect();
+          launchSparkleBurst(rect.left + rect.width / 2, rect.top);
+        }
+      } else {
+        saveBtn.textContent = "Depolama dolu 😕";
+      }
+      setTimeout(() => { saveBtn.textContent = "Galeriye Kaydet 🖼️"; }, 1600);
+    });
+  }
+}
+
+/* ---------- galerim: boyamaları bu tarayıcıda (localStorage) saklar ---------- */
+
+const GALLERY_KEY = "manifestAtolyeGallery";
+const GALLERY_MAX = 30;
+
+function loadGallery() {
+  try {
+    const raw = localStorage.getItem(GALLERY_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list : [];
+  } catch (err) {
+    return [];
+  }
+}
+
+function persistGallery(list) {
+  try {
+    localStorage.setItem(GALLERY_KEY, JSON.stringify(list));
+    return true;
+  } catch (err) {
+    return false; // depolama alanı dolu ya da tarayıcı izin vermiyor
+  }
+}
+
+// Yeni bir boyamayı galeriye ekler; depolama dolarsa en eski kayıtları
+// atarak yeniden dener. Kaydedemezse false döner.
+function addToGallery(dataUrl) {
+  let list = loadGallery();
+  list.unshift({ id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, dataUrl, savedAt: new Date().toISOString() });
+  list = list.slice(0, GALLERY_MAX);
+
+  while (list.length && !persistGallery(list)) {
+    list.pop(); // depolama doluysa en eski kayıttan başlayarak yer aç
+  }
+  renderGallery();
+  return list.length > 0 && list[0].dataUrl === dataUrl;
+}
+
+function deleteFromGallery(id) {
+  const list = loadGallery().filter((item) => item.id !== id);
+  persistGallery(list);
+  renderGallery();
+}
+
+function formatGalleryDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" });
+  } catch (err) {
+    return "";
+  }
+}
+
+function renderGallery() {
+  const grid = document.getElementById("savedGallery");
+  const emptyMsg = document.getElementById("galleryEmptyMsg");
+  if (!grid) return;
+
+  const list = loadGallery();
+  emptyMsg?.classList.toggle("hidden", list.length > 0);
+  grid.innerHTML = "";
+
+  list.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "saved-card";
+
+    const img = document.createElement("img");
+    img.src = item.dataUrl;
+    img.alt = "Kaydedilmiş boyama";
+    card.appendChild(img);
+
+    const date = document.createElement("span");
+    date.className = "saved-card-date";
+    date.textContent = formatGalleryDate(item.savedAt);
+    card.appendChild(date);
+
+    const actions = document.createElement("div");
+    actions.className = "saved-card-actions";
+
+    const dlBtn = document.createElement("button");
+    dlBtn.type = "button";
+    dlBtn.className = "saved-icon-btn";
+    dlBtn.setAttribute("aria-label", "İndir");
+    dlBtn.textContent = "💾";
+    dlBtn.addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.download = "manifest-kartim.png";
+      link.href = item.dataUrl;
+      link.click();
+    });
+    actions.appendChild(dlBtn);
+
+    const delBtn = document.createElement("button");
+    delBtn.type = "button";
+    delBtn.className = "saved-icon-btn";
+    delBtn.setAttribute("aria-label", "Sil");
+    delBtn.textContent = "🗑️";
+    delBtn.addEventListener("click", () => deleteFromGallery(item.id));
+    actions.appendChild(delBtn);
+
+    card.appendChild(actions);
+    grid.appendChild(card);
+  });
+}
+
+/* ---------- kenarlarda çiçek "karı" ---------- */
+
+function initFlowerSnow() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const FLOWERS = ["🌸", "🌷", "🌼", "🌺", "💮", "🌻"];
+
+  function spawnFlower() {
+    const f = document.createElement("span");
+    f.className = "flower-snow";
+    f.textContent = FLOWERS[Math.floor(Math.random() * FLOWERS.length)];
+    const side = Math.random() < 0.5 ? "left" : "right";
+    f.style[side] = Math.random() * 9 + "vw";
+    const size = Math.random() * 14 + 14;
+    f.style.fontSize = size + "px";
+    f.style.opacity = (Math.random() * 0.4 + 0.5).toFixed(2);
+    document.body.appendChild(f);
+
+    const duration = Math.random() * 6000 + 9000;
+    const drift = Math.random() * 50 - 25;
+    const spin = Math.random() * 300 - 150;
+    f.animate(
+      [
+        { transform: "translate(0, 0) rotate(0deg)", offset: 0 },
+        { transform: `translate(${drift}px, 60vh) rotate(${spin / 2}deg)`, offset: 0.5 },
+        { transform: `translate(${drift * 1.6}px, 112vh) rotate(${spin}deg)`, offset: 1 },
+      ],
+      { duration, easing: "linear" }
+    ).onfinish = () => f.remove();
+  }
+
+  for (let i = 0; i < 8; i++) setTimeout(spawnFlower, Math.random() * 4000);
+  setInterval(spawnFlower, 1000);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   initSite("atolye");
   initPaint();
+  initFlowerSnow();
+  renderGallery();
 });

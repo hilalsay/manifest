@@ -26,6 +26,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Mulish:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 </head>
 <body>
+  <div class="mascot-wrap" id="mascotWrap" aria-hidden="true">
+    <div class="mascot" id="songMascot">
+      <div class="mascot-rotate" id="mascotRotate">
+        <div class="mascot-wave">
+          <img src="img/karakter.png" alt="Sevimli Manifest karakteri" id="mascotImg" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="danger-btn" id="mascotToggleBtn" aria-label="Gizemli kırmızı buton"></button>
+
   <main>
     <section class="page-hero">
       <div class="wrap">
@@ -79,6 +90,7 @@
 
   <script src="js/data.js"></script>
   <script src="js/common.js"></script>
+  <script src="js/mascot.js"></script>
   <script>
     (function () {
       const playlist = Array.isArray(TRACKS) ? TRACKS : [];
