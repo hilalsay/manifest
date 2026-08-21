@@ -19,7 +19,14 @@
             <p class="fact">${m.fact}</p>
           </div>
         </div>`;
-      el.addEventListener("click", () => el.classList.toggle("flipped"));
+      el.addEventListener("click", (e) => {
+        const wasFlipped = el.classList.contains("flipped");
+        el.classList.toggle("flipped");
+        if(!wasFlipped){
+          if(typeof launchSparkleBurst === "function") launchSparkleBurst(e.clientX, e.clientY);
+          if(typeof playDing === "function") playDing();
+        }
+      });
       grid.appendChild(el);
     });
   }

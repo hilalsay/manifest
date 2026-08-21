@@ -35,6 +35,27 @@ const AURA_SONGS = [
   { title:"PES!", note:"", emoji:"🙅‍♀️" },
 ];
 
+/** "Hangi AURA Kızısın?" testi — her seçenek sırasıyla
+ *  Su (Aslı) · Fırtına (Suzy) · Doğa (Meri) · Ateş (Esra) elementine karşılık gelir. */
+const AURA_QUESTIONS = [
+  { q:"Zor bir günde kendini nasıl toparlarsın?",
+    opts:["Sakince oturup düşüncelerimi süzerim","Enerjimi dışa vurup hemen harekete geçerim","Doğaya çıkıp kafamı dağıtırım","Kendimi bir hedefe verip ilerlerim"]},
+  { q:"Arkadaşların seni bir kelimeyle tanımlasa hangisini seçerler?",
+    opts:["Derin","Spontane","Sıcakkanlı","Ateşli"]},
+  { q:"Bir sahne performansı hazırlarken en çok neye önem verirsin?",
+    opts:["Duyguyu doğru yansıtmaya","Beklenmedik bir sürpriz katmaya","Samimi ve doğal durmaya","Güçlü, iddialı bir giriş yapmaya"]},
+  { q:"Hangi hava/atmosfer sana en çok huzur verir?",
+    opts:["Yağmurlu, sakin bir gün","Fırtınalı, elektrikli bir hava","Güneşli, yeşillik dolu bir alan","Sıcak, canlı bir yaz akşamı"]},
+  { q:"Bir tartışmada tavrın nasıl olur?",
+    opts:["Önce dinlerim, sonra sakince konuşurum","Anında ve içtenlikle tepki veririm","Ortamı yumuşatmaya çalışırım","Net ve kararlı bir duruş sergilerim"]},
+  { q:"Sahnede en çok neyle dikkat çekersin?",
+    opts:["Akıcı ve zarif hareketlerle","Beklenmedik enerji patlamalarıyla","Doğal, içten bir tavırla","Güçlü sahne hakimiyetiyle"]},
+  { q:"Bir gününü nasıl geçirmeyi tercih edersin?",
+    opts:["Kitap okuyup dinlenerek","Yeni bir şeyler deneyip macera yaşayarak","Doğada vakit geçirip arkadaşlarımla sohbet ederek","Hedeflerime odaklanıp aktif çalışarak"]},
+  { q:"AURA'nın senin favori tarafı hangisi?",
+    opts:["Duygusal, akıcı sesi","Enerjik ve öngörülemez tarzı","Sıcak ve samimi enerjisi","Güçlü, ateşli sahne performansı"]},
+];
+
 const SONGS = [
   { title:"Zamansızdık", emoji:"⏳" },
   { title:"Arıyo", emoji:"📞" },
