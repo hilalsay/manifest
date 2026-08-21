@@ -13,6 +13,28 @@ const MEMBERS = [
     fact:"Profesyonel dans eğitmeni. Disiplini ve pozitif enerjisiyle biliniyor." },
 ];
 
+/** AURA GIRLS — 2026'da kurulan 4 kişilik yeni nesil kız grubu.
+ *  Üye isimlerinin baş harfleri çapraz okunduğunda A-U-R-A oluşur;
+ *  her üye doğadan bir element temsil eder. */
+const AURA_MEMBERS = [
+  { key:"asli", name:"Aslı Göztaşı", role:"Water of AURA", color:"#2E9EFF", hex:"#2E9EFF", emoji:"💧", colorTr:"Mavi",
+    fact:"22 yaşında. Su elementini temsil ediyor. Aura'dan önce BIG 5 Türkiye yarışmasıyla adını duyurmuştu." },
+  { key:"suzy", name:"Suzy Roumenov", role:"Storm of AURA", color:"#7C89B8", hex:"#7C89B8", emoji:"🌪️", colorTr:"Gri-Mavi",
+    fact:"21 yaşında. Fırtına ve hava elementini temsil ediyor." },
+  { key:"meri", name:"Meri Aslan", role:"Nature of AURA", color:"#3CB371", hex:"#3CB371", emoji:"🌿", colorTr:"Yeşil",
+    fact:"23 yaşında. Toprak ve doğa elementini temsil ediyor." },
+  { key:"esra", name:"Esra Mutlu", role:"Fire of AURA", color:"#FF6B35", hex:"#FF6B35", emoji:"🔥", colorTr:"Turuncu",
+    fact:"22 yaşında. Ateş elementini temsil ediyor." },
+];
+
+/** AURA GIRLS'ün şarkıları/projeleri. */
+const AURA_SONGS = [
+  { title:"YUH!", note:"Çıkış single'ı · Mayıs 2026", emoji:"💥" },
+  { title:"Tempo (Hepsi cover)", note:"Lansman gecesi performansı", emoji:"🎤" },
+  { title:"Tuzak", note:"", emoji:"🕸️" },
+  { title:"PES!", note:"", emoji:"🙅‍♀️" },
+];
+
 const SONGS = [
   { title:"Zamansızdık", emoji:"⏳" },
   { title:"Arıyo", emoji:"📞" },
@@ -63,6 +85,7 @@ const QUESTIONS = [
 const NAV_ITEMS = [
   { href:"/",            label:"Ana Sayfa",       id:"home" },
   { href:"kizlar.html",  label:"Manifest Kızları", id:"kizlar" },
+  { href:"aura.html",    label:"Aura Kızları",    id:"aura" },
   { href:"test.html",    label:"Test",            id:"test" },
   { href:"oyunlar.html", label:"Oyunlar",         id:"oyunlar" },
   { href:"atolye.html",  label:"Atölye",          id:"atolye" },
